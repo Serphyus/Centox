@@ -9,10 +9,6 @@ from tempfile import TemporaryDirectory
 
 from http.server import HTTPServer, SimpleHTTPRequestHandler
 
-if sys.platform == 'win32':
-    kernel32 = ctypes.windll.kernel32
-    kernel32.SetConsoleMode(kernel32.GetStdHandle(-11), 7)
-
 
 keyboard_layouts = [
     'be', 'br', 'ca', 'ch', 'de',
@@ -20,12 +16,6 @@ keyboard_layouts = [
     'hr', 'it', 'no', 'pt', 'ru',
     'si', 'sv', 'tr', 'us'
 ]
-
-
-def is_admin() -> bool:
-    if sys.platform == 'win32':
-        return ctypes.windll.shell32.IsUserAnAdmin() != 0
-    return os.getuid() == 0
 
 
 class RequestHandler(SimpleHTTPRequestHandler):
@@ -227,8 +217,8 @@ if __name__ == '__main__':
     with open(Path(abs_path, 'assets/logo.txt'), 'r', encoding='utf8') as file:
         print('\033[36m%s\033[0m' % file.read())
 
-    #if os.getuid() != 0:
-    #    error_msg('must be run as root', True)
+    if os.getuid() != 0:
+        error_msg('must be run as root', True)
 
     parser = argparse.ArgumentParser(description='Ip Tracker')
     parser.add_argument('executable', type=Path, nargs='?', help='executable file to inject')
