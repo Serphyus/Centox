@@ -120,12 +120,6 @@ def generate_injection(bin_path: str, keyboard: str, input_path: str, output_pat
     event_msg('injection compiled successfully -> %s' % output_path)
 
 
-def print_help() -> None: ...
-
-
-#def clear() -> None: sys.stdout.write('\033[2J\033[H')
-
-
 def main(abs_path: Path, args: argparse.ArgumentParser) -> None:
     check_dependencies()
 
