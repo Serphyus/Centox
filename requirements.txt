@@ -1,1 +1,2 @@
 psutil
+windows-curses>=2.3.0; sys_platform == 'windows'
