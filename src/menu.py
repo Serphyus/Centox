@@ -35,11 +35,6 @@ class Menu:
         self.add_sections(*sections)
 
 
-    def _strip_ascii(self, string: str) -> str:
-        regex = re.compile(r'(\x9B|\x1B\[)[0-?]*[ -\/]*[@-~]')
-        return regex.sub('', string)
-
-
     def _update_paddings(self) -> None:
         # first set the sector_space
         self._sect_size = [*map(lambda s: len(s), self._keys)]
