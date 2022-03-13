@@ -1,5 +1,4 @@
 import os
-import re
 from typing import Any, Sequence
 
 from .console import Console
@@ -14,17 +13,7 @@ class Menu:
             side_padding: int = 3,
         ) -> None:
 
-        # counter for how many lines to return
-        # when outputting the sections
-        self._total_lines = 0
-
-        # item padding will set a space padding
-        # between each section padding to avoid
-        # blending sections or keys together
         self._item_padding = item_padding
-        
-        # side padding will be the menus
-        # x offset from the left side
         self._side_padding = side_padding
 
         self._keys = keys
@@ -36,7 +25,6 @@ class Menu:
 
 
     def _update_paddings(self) -> None:
-        # first set the sector_space
         self._sect_size = [*map(lambda s: len(s), self._keys)]
 
         for sect in self._sections:
@@ -48,8 +36,6 @@ class Menu:
 
 
     def _update_separator(self) -> None:
-        # start value at 4 to account for
-        # the space taken by number section
         sep_len = self._number_space
         
         sep_len += sum(self._sect_size)
@@ -75,7 +61,6 @@ class Menu:
 
 
     def _output_menu_top(self) -> None:
-        self._total_lines += 2
 
         top_menu = ' ' * self._number_space
         for index, key in enumerate(self._keys):
@@ -109,32 +94,27 @@ class Menu:
 
 
     def _output_menu(self) -> None:
-        Console.reset_lines(self._total_lines)
-        self._total_lines = 0
-
         self._output_menu_top()
         for index, sect in enumerate(self._sections):
             self._output_section(index + 1, sect)
-            self._total_lines += 1
             
             if index in self._dividers:
                 self._add_side_padding(self._number_space)
-
                 item_padding = len(self._keys) * self._item_padding
-
                 print('-' * (sum(self._sect_size) + item_padding))
-                self._total_lines += 1
         
         print()
 
 
     def prompt(self, prefix: str) -> Any:
+        Console.clear_screen()
+        Console.output_logo()
+
         Console.hide_cursor()
         self._output_menu()
         Console.show_cursor()
 
         prompt = (' ' * self._side_padding) + '%s ' % prefix
-        self._total_lines += 2
 
         while True:
             user_input = input(prompt)
@@ -143,7 +123,6 @@ class Menu:
                 index = int(user_input) - 1
 
                 if index == len(self._sections):
-                    Console.reset_lines(self._total_lines)
                     return
 
                 if index in range(len(self._sections)):
