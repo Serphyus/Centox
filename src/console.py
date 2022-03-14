@@ -34,18 +34,6 @@ class Console:
     def event_msg(cls, msg: str) -> None:
         print(cls._log_msg('*', '94', msg))
 
-
-    @classmethod
-    def hide_cursor(cls) -> None:
-        print('\033[?25l', end='')
-        atexit.register(cls.show_cursor)
-
-
-    @classmethod
-    def show_cursor(cls) -> None:
-        print('\033[?25h', end='')
-        atexit.unregister(cls.show_cursor)
-
     
     @staticmethod
     def save_pos() -> None:

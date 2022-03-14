@@ -27,7 +27,7 @@ class Argument:
         Console.reset_lines(total_reset)
 
 
-    def get_input(self) -> None:
+    def update_argument(self) -> None:
         while True:
             readline.set_pre_input_hook(self._hook)
             raw_user_input = input(self._prompt)
