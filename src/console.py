@@ -31,7 +31,7 @@ class Console:
 
 
     @classmethod
-    def event_msg(cls, msg: str) -> None:
+    def debug_msg(cls, msg: str) -> None:
         print(cls._log_msg('*', '94', msg))
 
     

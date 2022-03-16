@@ -1,4 +1,4 @@
-import os
+import sys
 import readline
 
 from .console import Console
@@ -6,23 +6,33 @@ from .console import Console
 
 class Argument:
     def __init__(self,
-            prompt: str,
-            prefill: str = "",
+            name: str,
         ) -> None:
         
-        self._prompt = prompt
-        self._prefill = prefill
-    
+        self._name = name
+        self._value = ""
+
+
+    @property
+    def name(self) -> str:
+        return self._name
+
+    @property
+    def value(self) -> str:
+        return self._value
+
 
     def _hook(self):
-        readline.insert_text(self._prefill)
+        readline.insert_text(self._value)
         readline.redisplay()
 
 
     def prompt(self) -> None:
         readline.set_pre_input_hook(self._hook)
-        raw_user_input = input(self._prompt)
+
+        input_prompt = '%s: ' % self._name.capitalize()
+        raw_user_input = input(input_prompt)
         readline.set_pre_input_hook()
         
-        self._prefill = raw_user_input.strip()
-        return self._prefill
+        self._value = raw_user_input.strip()
+        return self._value
