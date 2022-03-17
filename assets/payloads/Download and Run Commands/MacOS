@@ -1,4 +1,4 @@
-DELAY 400
+DELAY {delay}
 COMMAND SPACE
 DELAY 10
 STRING terminal

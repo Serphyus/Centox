@@ -1,4 +1,4 @@
-DELAY 500
+DELAY {delay}
 GUI r
 ENTER
 DELAY 300
