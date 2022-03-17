@@ -1,4 +1,5 @@
 import os
+import re
 from pathlib import Path
 from string import Formatter
 from typing import Sequence, Dict
@@ -8,17 +9,19 @@ from .argument import Argument
 
 
 class Payload:
-    def __init__(self, path: Path) -> None:
+    def __init__(self, path: Path, default_args={"delay": "500"}) -> None:
         self._path = path
         
         self._platform = None
 
         self._cont = ''
-        self._args: Sequence[Argument] = []
+        self._args = []
 
         self._layout = ''
 
         self._available = os.listdir(self._path)
+
+        self._default_args = default_args
 
 
     def _read_file(self) -> str:
@@ -27,11 +30,38 @@ class Payload:
 
 
     def _read_args(self) -> Sequence[Dict[str, str]]:
-        keywords = []
+        # a list of all kwargs which will
+        # be used to create Argument objects
+        payload_kwargs = []
+        
+        # a list of already assigned keys
+        assigned_keys = []
+
+        # loop through each formattable keyword inside {...}
         for key in map(lambda l: l[1], Formatter().parse(self._cont)):
-            if key not in keywords and key is not None:
-                keywords.append(key)
-        return [Argument(key) for key in keywords]
+            
+            # check that the key does not repeat or is None
+            if key not in assigned_keys and key is not None:
+                # set a kwarg to store the new value in                
+                kwargs = {'name': '', 'value': ''}
+
+                # set key name
+                kwargs['name'] = key
+                
+                # set default args
+                if key in self._default_args:
+                    kwargs['value'] = self._default_args[key]
+
+                # store the kwargs
+                payload_kwargs.append(kwargs)
+                
+                # add the assigned key so it does not repeat
+                assigned_keys.append(key)
+
+        print(payload_kwargs)
+
+        # return all argument created with the kwargs
+        return [Argument(**kwargs) for kwargs in payload_kwargs]
 
 
     @property

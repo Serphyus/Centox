@@ -7,10 +7,11 @@ from .console import Console
 class Argument:
     def __init__(self,
             name: str,
+            value: str
         ) -> None:
         
         self._name = name
-        self._value = ""
+        self._value = value
 
 
     @property
