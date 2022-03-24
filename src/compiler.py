@@ -8,8 +8,8 @@ from .console import Console
 from .payload import Payload
 
 
-class Generator:
-    def __init__(self, encoder: Path, payload: Payload, output: Path) -> None:
+class Compiler:
+    def __init__(self, encoder: Path) -> None:
         # set bin_path as java to be used since
         # the encoder is compiled as a .jar file
         self._bin_path = "java"
@@ -17,14 +17,8 @@ class Generator:
         # store the encoder path
         self._encoder = encoder
 
-        # payload to encode
-        self._payload = payload
 
-        # set output path for final injection
-        self._output = output
-
-
-    def write_payload(self) -> Path:
+    def _write_payload(self, payload: Payload) -> Path:
         # create temporary directory to
         # store unencoded payload to and
         # register it to delete itself at exit
@@ -40,7 +34,7 @@ class Generator:
         path.touch()
         
         # create the final payload
-        final_payload = self._payload.parse()
+        final_payload = payload.parse()
         
         # write payload to temporary file
         with open(path, 'w') as file:
@@ -51,20 +45,19 @@ class Generator:
         return path
 
 
-    def generate(self) -> None:
-        payload_path = self.write_payload()
+    def compile_payload(self, payload: Payload, output: Path, layout: str) -> None:
+        payload_path = self._write_payload(payload)
 
-        if self._output.is_file():
+        if output.is_file():
             Console.warning_msg('overwriting existing injection')
 
             try:
-                os.remove(self._output)
+                os.remove(output)
             except OSError:
                 Console.error_msg("unable to overwrite old inject.bin", True)
 
-        command = '%s -jar %s -l %s -i %s -o %s' % (
-            self._bin_path, self._encoder, self._payload.layout,
-            payload_path, self._output)
+        command = '%s -jar %s -i %s -o %s -l %s' % (self._bin_path, self._encoder,
+                                                    payload_path, output, layout)
 
         process = subprocess.Popen(
             command,
@@ -74,10 +67,9 @@ class Generator:
         )
 
         Console.debug_msg("compiling payload to injection binary")
-
         process.wait()
 
-        if self._output.is_file():
-            Console.debug_msg('injection compiled successfully -> %s' % self._output)
+        if output.is_file():
+            Console.debug_msg('injection compiled successfully -> %s' % output)
         else:
             Console.error_msg('unable to generate inject.bin')

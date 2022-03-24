@@ -1,5 +1,4 @@
 import sys
-import atexit
 from pathlib import Path
 
 
@@ -9,13 +8,13 @@ class Console:
 
     @classmethod
     def output_logo(cls) -> None:
-        with open(Path(cls.abs_path, 'assets/logo.txt'), 'r', encoding='utf8') as file:
+        with open(Path(cls.abs_path, 'assets', 'logo.txt'), 'r', encoding='utf8') as file:
             print('\033[H\033[36m%s\033[0m' % file.read())
 
 
     @staticmethod
     def _log_msg(symbol: str, color: str, msg: str) -> str:
-        return '\033[%sm[%s]\033[0m %s' % (color, symbol, msg)
+        return '\x1b[%sm[%s]\x1b[0m %s' % (color, symbol, msg)
 
 
     @classmethod
@@ -32,29 +31,14 @@ class Console:
 
     @classmethod
     def debug_msg(cls, msg: str) -> None:
-        print(cls._log_msg('*', '94', msg))
-
-    
-    @staticmethod
-    def save_pos() -> None:
-        print('\0337', end='')
-
-
-    @staticmethod
-    def load_pos() -> None:
-        print('\0338', end='')
-
-
-    @staticmethod
-    def move_forward(spaces: int) -> None:
-        print('\033[%sC' % spaces, end='')
+        print(cls._log_msg('*', '96', msg))
 
 
     @staticmethod
     def reset_lines(lines: int) -> None:
-        print('\033[%sA\033[0J' % lines, end='')
+        print('\x1b[%sA\x1b[0J' % lines, end='')
 
 
     @staticmethod
     def clear_screen() -> None:
-        print('\033[2J', end='')
+        print('\x1b[H\x1b[2J\x1b[3J', end='')
