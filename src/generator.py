@@ -7,13 +7,6 @@ from tempfile import TemporaryDirectory
 from .console import Console
 from .payload import Payload
 
-LAYOUTS = [
-    'be', 'br', 'ca', 'ch', 'de',
-    'dk', 'es', 'fi', 'fr', 'gb',
-    'hr', 'it', 'no', 'pt', 'ru',
-    'si', 'sv', 'tr', 'us'
-]
-
 
 class Generator:
     def __init__(self, encoder: Path, payload: Payload, output: Path) -> None:
