@@ -1,4 +1,5 @@
 import os
+import argparse
 from pathlib import Path
 from configparser import ConfigParser
 from tabulate import tabulate
@@ -84,40 +85,57 @@ class Handler:
 
 
     def set_variable(self, argument: str = None, value: str = None) -> None:
-        if argument is None:
+        if self._current_payload is None:
+            Console.error_msg('no payload selected')
+        elif argument is None:
             Console.error_msg('missing argument')
-            return
-        
-        if value is None:
+        elif value is None:
             Console.error_msg('missing value argument')
-            return
-        
-        if argument not in self._current_payload.kwargs:
+        elif argument not in self._current_payload.kwargs:
             Console.error_msg('invalid argument %s' % argument)
-            return
-        
-        self._current_payload.kwargs[argument] = value
+        else:
+            self._current_payload.kwargs[argument] = value
 
 
     def show_options(self) -> None:
-        argument_table = []
-        if self._current_payload is not None:
-            for key, value in self._current_payload.kwargs.items():
-                argument_table.append([key, value])
-        
         if self._current_payload is not None:
             path = self._current_payload.path
             payload_name = path.relative_to(self._payload_dir)
         else:
             payload_name = None
-
         print('\n Payload: %s\n' % payload_name)
+
+        argument_table = []
+        if self._current_payload is not None:
+            for key, value in self._current_payload.kwargs.items():
+                argument_table.append([key, value])
         print(tabulate(argument_table, ['Argument', 'Value']))
 
 
-    def generate_payload(self) -> None:
-        self._compiler.compile_payload(self._current_payload, Path('inject.bin'), 'no')
+    def generate_payload(self, *args) -> None:
+        if self._current_payload is None:
+            Console.error_msg('no payload selected')
+            return
+        
+        parser = argparse.ArgumentParser(add_help=False, exit_on_error=False)
+        parser.add_argument('-o', dest='output', type=str)
+        parser.add_argument('-l', dest='layout', type=str)
+        parser.add_argument('-h', dest='show_help', action='store_true')
 
+        args, unknown = parser.parse_known_args(args)
+        
+        if unknown:
+            Console.error_msg('invalid arguments')
+        elif args.output is None:
+            Console.error_msg('missing output argument: -o')
+        elif args.layout is None:
+            Console.error_msg('missing layout argument: -l')
+        else:
+            self._compiler.compile_payload(
+                self._current_payload,
+                Path(args.output),
+                args.layout
+            )
     
 
     def show_help(self) -> None:
@@ -133,13 +151,16 @@ class Handler:
         print('\n' + tabulate(help_table, ['Command', 'Description']))
 
 
-
     def _get_user_input(self) -> Sequence[str]:
         prompt = "\n\033[96m[Centox]\033[0m \033[95m$\033[0m "
 
         user_input = ""
         while not user_input:
-            user_input = input(prompt).strip()
+            try:
+                user_input = input(prompt).strip()
+            except KeyboardInterrupt:
+                print()
+                Console.error_msg('keyboard interrupt')
 
         return user_input.split()
     

@@ -49,7 +49,7 @@ class Compiler:
         payload_path = self._write_payload(payload)
 
         if output.is_file():
-            Console.warning_msg('overwriting existing injection')
+            Console.warning_msg('overwriting existing %s file' % output.name)
 
             try:
                 os.remove(output)

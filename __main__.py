@@ -46,9 +46,5 @@ if __name__ == '__main__':
     Console.clear_screen()
     Console.output_logo()
 
-    # run main and catch ctrl-c keyboard interruptions
-    try:
-        main(abs_path)
-    except KeyboardInterrupt:
-        print()
-        Console.error_msg('keyboard interrupt')
+    # run main method
+    main(abs_path)
