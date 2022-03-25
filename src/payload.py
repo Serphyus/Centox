@@ -29,7 +29,7 @@ class Payload:
             if key not in kwargs and key is not None:
                 # check if keyword value exist in default_args
                 # and set it as the kwargs[key] else ''
-                kwargs[key] = self._default_args.get(key, '')
+                kwargs[key] = self._default_args['payload_args'].get(key, '')
 
         # return all argument created with the kwargs
         return kwargs
@@ -46,6 +46,17 @@ class Payload:
     
 
     def parse(self) -> str:
+        # create a dict containing the final
+        # kwargs to parse payload content with
+        final_kwargs = {}
+
+        # check if any keyword matches a special argument
+        # for then to change the value to the specail arg
+        for key, value in self._kwargs.items():
+            if key in self._default_args['special_args']:
+                value = self._default_args['special_args'][key][value]
+            final_kwargs[key] = value
+            
         # format the file content with the kwargs
         # and return the formatted file content
-        return self._content.format(**self._kwargs)
+        return self._content.format(**final_kwargs)

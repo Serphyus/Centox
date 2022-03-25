@@ -1,0 +1,13 @@
+{
+    "payload_args": {
+        "start_delay": 500,
+        "windows_admin": "false"
+    },
+
+    "special_args": {
+        "windows_admin": {
+            "true": "CTRL-SHIFT ENTER\nDELAY 500\nSHIFT TAB\nDELAY 100\nENTER",
+            "false": "ENTER"
+        }
+    }
+}
