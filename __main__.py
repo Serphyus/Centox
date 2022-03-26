@@ -45,8 +45,7 @@ if __name__ == '__main__':
     # get abs path of running python file
     abs_path = Path(__file__).resolve().parent
 
-    # clear screen and output logo
-    Console.clear_screen()
+    # output the logo
     output_logo(abs_path)
 
     # run main method
