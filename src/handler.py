@@ -77,11 +77,6 @@ class Handler:
 
 
     def list_payloads(self) -> None:
-        # tries to read the descriptions of
-        # each payload which is the first
-        # comment and creates a table of to
-        # be outputted to the handler
-
         # creates an empty table which will contain
         # elements with [path, description] contents
         payload_table = []
