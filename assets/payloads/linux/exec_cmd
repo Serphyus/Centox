@@ -2,5 +2,5 @@ REM Executes command in terminal
 DELAY {start_delay}
 CTRL-ALT t
 DELAY 400
-STRING {command}
+STRING {command}{close_bash}
 ENTER
