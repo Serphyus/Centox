@@ -1,6 +1,7 @@
 import os
 import sys
 import json
+import shlex
 import argparse
 from pathlib import Path
 from tabulate import tabulate
@@ -120,7 +121,7 @@ class Handler:
             self._current_payload = Payload(Path(self._payload_dir, payload), self._defaults)
 
 
-    def set_variable(self, argument: str = None, *value) -> None:
+    def set_variable(self, argument: str = None, value: str = None) -> None:
         # makes sure a payload is selected
         if self._current_payload is None:
             Console.error_msg('no payload selected')
@@ -130,7 +131,7 @@ class Handler:
             Console.error_msg('missing argument')
         
         # makes values are provided
-        elif len(value) == 0:
+        elif value is None:
             Console.error_msg('missing value argument')
         
         # checks if the arguments is valid
@@ -138,9 +139,6 @@ class Handler:
             Console.error_msg('invalid argument %s' % argument)
         
         else:
-            # joins together arguments
-            value = ' '.join(value)
-
             # checks if the argument is a special argument and 
             # makes sure the value matches the special argument
             if argument in self._defaults['special_args']:
@@ -235,20 +233,24 @@ class Handler:
 
     def _get_user_input(self) -> Sequence[str]:
         # creates a prompt for commands
-        prompt = "\n\033[96m[Centox]\033[0m \033[95m$\033[0m "
+        prompt = '\n\033[96m[Centox]\033[0m \033[95m$\033[0m '
 
         # loops as long as user input is empty
         # and then returns it once the user has
         # entered a valid input
-        user_input = ""
+        user_input = []
         while not user_input:
             try:
-                user_input = input(prompt).strip()
+                # split using shlex to preserve
+                # double quoted strings as one
+                user_input = shlex.split(input(prompt).strip())
+            except ValueError:
+                Console.error_msg('missing closing quote: "')
             except KeyboardInterrupt:
                 print()
                 Console.error_msg('keyboard interrupt')
 
-        return user_input.split()
+        return user_input
     
     
     def run(self) -> None:
