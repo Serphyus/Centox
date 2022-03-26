@@ -9,7 +9,7 @@ from src.console import Console
 def output_logo(abs_path: Path) -> None:
     # outputs the logo in cyan colors
     with open(Path(abs_path, 'assets', 'logo.txt'), 'r', encoding='utf8') as file:
-        print('\033[H\033[36m%s\033[0m' % file.read())
+        print('\x1b[36m%s\x1b[0m' % file.read())
 
 
 def check_dependencies() -> None:
