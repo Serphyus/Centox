@@ -1,4 +1,3 @@
-import os
 from pathlib import Path
 from string import Formatter
 from typing import Dict
