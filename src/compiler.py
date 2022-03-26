@@ -56,7 +56,7 @@ class Compiler:
             except OSError:
                 Console.error_msg("unable to overwrite old inject.bin", True)
 
-        command = '%s -jar %s -i %s -o %s -l %s' % (self._bin_path, self._encoder,
+        command = '%s -jar %s -i %s -o "%s" -l %s' % (self._bin_path, self._encoder,
                                                     payload_path, output, layout)
 
         process = subprocess.Popen(

@@ -180,12 +180,16 @@ class Handler:
         
         # use an argument parser for handling arguments
         parser = argparse.ArgumentParser(add_help=False, exit_on_error=False)
-        parser.add_argument('-o', dest='output', type=str)
+        parser.add_argument('-o', dest='output', type=str, default='inject.bin')
         parser.add_argument('-l', dest='layout', type=str)
         parser.add_argument('-h', dest='show_help', action='store_true')
 
         # parse command arguments
-        args, unknown = parser.parse_known_args(args)
+        try:
+            args, unknown = parser.parse_known_args(args)
+        except argparse.ArgumentError:
+            Console.error_msg('invalid arguments')
+            return
         
         if unknown:
             Console.error_msg('invalid arguments')
