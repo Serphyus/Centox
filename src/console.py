@@ -3,15 +3,6 @@ from pathlib import Path
 
 
 class Console:
-    abs_path: Path
-
-
-    @classmethod
-    def output_logo(cls) -> None:
-        with open(Path(cls.abs_path, 'assets', 'logo.txt'), 'r', encoding='utf8') as file:
-            print('\033[H\033[36m%s\033[0m' % file.read())
-
-
     @staticmethod
     def _log_msg(symbol: str, color: str, msg: str) -> str:
         return '\x1b[%sm[%s]\x1b[0m %s' % (color, symbol, msg)

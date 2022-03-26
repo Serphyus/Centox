@@ -6,6 +6,11 @@ from src.handler import Handler
 from src.console import Console
 
 
+def output_logo(abs_path: Path) -> None:
+    with open(Path(abs_path, 'assets', 'logo.txt'), 'r', encoding='utf8') as file:
+        print('\033[H\033[36m%s\033[0m' % file.read())
+
+
 def check_dependencies() -> None:
     dependencies = ['java']
 
@@ -38,13 +43,9 @@ if __name__ == '__main__':
     # get abs path of running python file
     abs_path = Path(__file__).resolve().parent
 
-    # set abs_path in console for it to be able
-    # to read and read and display the logo file
-    Console.abs_path = abs_path
-
     # clear screen and output logo
     Console.clear_screen()
-    Console.output_logo()
+    output_logo(abs_path)
 
     # run main method
     main(abs_path)
