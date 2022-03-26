@@ -7,6 +7,7 @@ from src.console import Console
 
 
 def output_logo(abs_path: Path) -> None:
+    # outputs the logo in cyan colors
     with open(Path(abs_path, 'assets', 'logo.txt'), 'r', encoding='utf8') as file:
         print('\033[H\033[36m%s\033[0m' % file.read())
 
@@ -14,14 +15,15 @@ def output_logo(abs_path: Path) -> None:
 def check_dependencies() -> None:
     dependencies = ['java']
 
-    delimeter = ';' if sys.platform == 'win32' else ':'
-    env_paths = os.environ['PATH'].split(delimeter)
+    # get a list of all environmen paths
+    env_paths = os.environ['PATH'].split(':')
 
+    # checks dependencies and gives outputs
+    # an error message when one is missing
     Console.debug_msg('checking dependencies')
     for executable in dependencies:
-        if sys.platform == 'win32':
-            executable += '.exe'
-
+        # checks if any of the paths in the environment
+        # variable PATH has the dependency file in it
         if not any(map(lambda p: Path(p, executable).is_file(), env_paths)):
             Console.error_msg('unable to locate: %s\n' % executable, True)
 

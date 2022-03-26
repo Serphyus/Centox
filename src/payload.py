@@ -15,6 +15,7 @@ class Payload:
 
 
     def _read_file(self) -> str:
+        # reads the payload file
         with open(Path(self._path), 'r', encoding='utf-8') as file:
             return file.read()
 

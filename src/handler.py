@@ -105,43 +105,59 @@ class Handler:
 
 
     def use_payload(self, payload: str = None) -> None:
+        # checks user provided a payload argument
         if payload is None:
             Console.error_msg('missing payload argument')
         
+        # checks that the provided payload argument
+        # does not matches an existing payload file
         elif Path(payload) not in self._available_payloads:
             Console.error_msg('invalid payload selected')
         
+        # sets the new payload using the
+        # payload dir and the payload path
         else:
             self._current_payload = Payload(Path(self._payload_dir, payload), self._defaults)
 
 
     def set_variable(self, argument: str = None, *value) -> None:
+        # makes sure a payload is selected
         if self._current_payload is None:
             Console.error_msg('no payload selected')
         
+        # makes sure an argument is provided
         elif argument is None:
             Console.error_msg('missing argument')
         
+        # makes values are provided
         elif len(value) == 0:
             Console.error_msg('missing value argument')
         
+        # checks if the arguments is valid
         elif argument not in self._current_payload.kwargs:
             Console.error_msg('invalid argument %s' % argument)
         
         else:
+            # joins together arguments
             value = ' '.join(value)
 
+            # checks if the argument is a special argument and 
+            # makes sure the value matches the special argument
             if argument in self._defaults['special_args']:
                 special_arg = self._defaults['special_args'][argument]
-                
+
+                # check if the value is valid                
                 if value not in special_arg:
                     Console.error_msg('%s must be a value in: [%s]' % (value, ', '.join(special_arg.keys())))
                     return
             
+            # sets the new value
             self._current_payload.kwargs[argument] = value
 
 
     def show_options(self) -> None:
+        # outputs the name of the
+        # current selected payload
         if self._current_payload is not None:
             path = self._current_payload.path
             payload_name = path.relative_to(self._payload_dir)
@@ -149,6 +165,8 @@ class Handler:
             payload_name = None
         print('\n Payload: %s\n' % payload_name)
 
+        # output all the arguments and their
+        # values of the current payload
         argument_table = []
         if self._current_payload is not None:
             for key, value in self._current_payload.kwargs.items():
@@ -157,28 +175,33 @@ class Handler:
 
 
     def generate_payload(self, *args) -> None:
+        # checks that a payload is selected
         if self._current_payload is None:
             Console.error_msg('no payload selected')
             return
         
+        # use an argument parser for handling arguments
         parser = argparse.ArgumentParser(add_help=False, exit_on_error=False)
         parser.add_argument('-o', dest='output', type=str)
         parser.add_argument('-l', dest='layout', type=str)
         parser.add_argument('-h', dest='show_help', action='store_true')
 
+        # parse command arguments
         args, unknown = parser.parse_known_args(args)
         
         if unknown:
             Console.error_msg('invalid arguments')
         
         elif args.show_help:
+            # if the help arg is used it will
+            # show a message of all available
+            # command arguments
             help_table = [
                 ['-o', 'spesifies the output file of the injection'],
                 ['-l', 'specifies the keyboard layout for the injection'],
                 ['-h', 'shows this help message']
             ]
             print('\n' + tabulate(help_table, ('Arg', 'Description')))
-        
 
         elif args.output is None:
             Console.error_msg('missing output argument: -o')
@@ -187,6 +210,7 @@ class Handler:
             Console.error_msg('missing layout argument: -l')
 
         else:
+            # compile the current payload
             self._compiler.compile_payload(
                 self._current_payload,
                 Path(args.output),
@@ -195,6 +219,8 @@ class Handler:
 
 
     def show_help(self) -> None:
+        # output a help menu of all available
+        # commands and their usage description
         help_table = [
             ['list', 'lists all available payloads'],
             ['use', 'choose a payload to use'],
@@ -208,8 +234,12 @@ class Handler:
 
 
     def _get_user_input(self) -> Sequence[str]:
+        # creates a prompt for commands
         prompt = "\n\033[96m[Centox]\033[0m \033[95m$\033[0m "
 
+        # loops as long as user input is empty
+        # and then returns it once the user has
+        # entered a valid input
         user_input = ""
         while not user_input:
             try:
