@@ -2,6 +2,7 @@ import os
 import sys
 import json
 import shlex
+import readline
 import argparse
 from pathlib import Path
 from tabulate import tabulate
@@ -10,9 +11,6 @@ from typing import Sequence
 from .console import Console
 from .payload import Payload
 from .compiler import Compiler
-
-if sys.platform != 'win32':
-    import readline
 
 
 class Handler:
