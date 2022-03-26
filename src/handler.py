@@ -263,7 +263,7 @@ class Handler:
             'generate': self.generate_payload,
             'help': self.show_help,
             'clear': Console.clear_screen,
-            'exit': lambda: exit()
+            'exit': lambda: sys.exit()
         }
 
         while True:
