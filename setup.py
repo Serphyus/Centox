@@ -47,7 +47,7 @@ def install_centox(abs_path: Path) -> None:
     # the -p argument to preserve current attributes
     exec_cmd('cp -rp %s/* %s' % (abs_path, centox_dest))
     
-    # create bin file
+    # create executable file
     with open('/usr/bin/centox', 'w') as file:
         file.write('#!/bin/sh\npython3 /usr/share/centox/centox.py')
 
