@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 import os
+import platform
 from pathlib import Path
 
 from src.handler import Handler
@@ -42,6 +43,13 @@ def main(abs_path: Path) -> None:
 
 
 if __name__ == '__main__':
+    # get current python version
+    version = tuple(map(int, platform.python_version_tuple()[:2]))
+    
+    # check if python version is 3.9 or higher
+    if version[0] < 3 or version[1] < 9:
+        Console.error_msg('centox requires python 3.9 or higher', True)
+
     # get abs path of running python file
     abs_path = Path(__file__).resolve().parent
 
