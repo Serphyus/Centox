@@ -86,7 +86,7 @@ def install_centox(abs_path: Path) -> None:
     # give centox executable priviliges
     exec_cmd('chmod +rx /usr/bin/centox')
 
-    Console.debug_msg('Centox isntalled successfully')
+    Console.debug_msg('Centox installed successfully')
 
 
 def main(abs_path: Path):
