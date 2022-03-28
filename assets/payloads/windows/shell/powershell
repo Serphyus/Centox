@@ -1,4 +1,4 @@
-REM Creates and executes a reverse powershell
+REM Creates a reverse shell using a staged powershell script
 DELAY {start_delay}
 GUI r
 DELAY 350
