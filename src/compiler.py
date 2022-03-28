@@ -46,19 +46,30 @@ class Compiler:
 
 
     def compile_payload(self, payload: Payload, output: Path, layout: str) -> None:
+        # parse and write the final payload
         payload_path = self._write_payload(payload)
 
+        # checks if the output path is already a file
         if output.is_file():
             Console.warning_msg('overwriting existing %s file' % output.name)
 
+            # try to remove the file
             try:
                 os.remove(output)
             except OSError:
-                Console.error_msg("unable to overwrite old inject.bin", True)
+                # if unable to remove the existing file
+                # an error message will be outputted and
+                # the payload compilation will be abortec
+                Console.error_msg('unable to overwrite old inject.bin')
+                return
 
+        # construct the command for generating
+        # the injection binary for rubber ducky
         command = '%s -jar %s -i %s -o "%s" -l %s' % (self._bin_path, self._encoder,
                                                     payload_path, output, layout)
 
+        # creates a subprocess that compiles
+        # the payload into an injection binary
         process = subprocess.Popen(
             command,
             stdout=subprocess.PIPE,
@@ -66,9 +77,11 @@ class Compiler:
             shell=True
         )
 
-        Console.debug_msg("compiling payload to injection binary")
+        # wait for the process to finish
+        Console.debug_msg('compiling payload to injection binary')
         process.wait()
 
+        # check if the file was generated successfully
         if output.is_file():
             Console.debug_msg('injection compiled successfully -> %s' % output)
         else:
