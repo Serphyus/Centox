@@ -36,7 +36,7 @@ def install_dependencies(abs_path: Path) -> None:
     
     # install required packages
     Console.debug_msg('installing python requirements')
-    proc = exec_cmd('python3 -m pip -r %s' % requirements_path)
+    proc = exec_cmd('pip3 -r %s' % requirements_path)
     proc.wait()
 
 
