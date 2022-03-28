@@ -59,7 +59,7 @@ class Compiler:
             except OSError:
                 # if unable to remove the existing file
                 # an error message will be outputted and
-                # the payload compilation will be abortec
+                # the payload compilation will be aborted
                 Console.error_msg('unable to overwrite old inject.bin')
                 return
 
