@@ -205,6 +205,10 @@ class Handler:
             Console.error_msg('missing layout argument: -l')
 
         else:
+            if args.layout not in self._layouts:
+                Console.error_msg('invalid keyboard layout: %s' % args.layout)
+                return
+
             # compile the current payload
             self._compiler.compile_payload(
                 self._current_payload,
