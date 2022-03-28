@@ -20,6 +20,8 @@ def exec_cmd(command: str) -> None:
 
 
 def install_dependencies(abs_path: Path) -> None:
+    Console.debug_msg('fetching info about current linux distro')
+    
     # fetch info about the linux system
     os_info = exec_cmd('cat /etc/os-release').stdout.read().decode().splitlines()
     
@@ -35,8 +37,10 @@ def install_dependencies(abs_path: Path) -> None:
     if system is None:
         Console.error_msg('unable to identify linux distro', True)
     
+    Console.debug_msg('installing java openjdk package')
+
     # if the system is arch based use pacman
-    elif system == 'arch':
+    if system == 'arch':
         exec_cmd('sudo pacman -S --noconfirm --needed jdk-openjdk')
     
     # if the system is not arch try installing 
@@ -63,7 +67,7 @@ def install_centox(abs_path: Path) -> None:
 
     # remove currently installed centox
     if centox_dest.is_dir():
-        Console.warning_msg('replacing current centox install')
+        Console.warning_msg('replacing current centox installation')
         rmtree(centox_dest)
 
     Console.debug_msg('installing centox to /usr/share/centox')
