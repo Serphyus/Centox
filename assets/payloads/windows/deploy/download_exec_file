@@ -1,4 +1,4 @@
-REM Downloads and executes file
+REM Downloads and executes a windows executable
 DELAY {start_delay}
 GUI r
 DELAY 350

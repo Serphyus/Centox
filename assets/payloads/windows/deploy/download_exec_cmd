@@ -1,4 +1,4 @@
-REM Downloads and executes commands
+REM Downloads and executes commands in powershell
 DELAY {start_delay}
 GUI r
 DELAY 350
