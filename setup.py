@@ -20,7 +20,7 @@ def exec_cmd(command: str) -> None:
 
 
 def install_dependencies(abs_path: Path) -> None:
-    Console.debug_msg('fetching info about current linux distro')
+    Console.debug_msg('fetching info about linux distro')
     
     # fetch info about the linux system
     os_info = exec_cmd('cat /etc/os-release').stdout.read().decode().splitlines()
