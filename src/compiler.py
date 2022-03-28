@@ -78,7 +78,7 @@ class Compiler:
         )
 
         # wait for the process to finish
-        Console.debug_msg('compiling payload to injection binary')
+        Console.debug_msg('compiling payload to injection binary...')
         process.wait()
 
         # check if the file was generated successfully
