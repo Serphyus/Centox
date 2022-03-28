@@ -23,7 +23,8 @@ def install_dependencies(abs_path: Path) -> None:
     Console.debug_msg('installing required packages')
 
     # install all required packages using apt
-    exec_cmd('apt-get install -y python3 python3-pip default-jdk')
+    proc = exec_cmd('apt-get install -y python3 python3-pip default-jdk')
+    proc.wait()
 
     # check if required the packages is installed
     for executable in ['java', 'python3', 'pip3']:
