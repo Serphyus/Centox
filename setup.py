@@ -20,6 +20,34 @@ def exec_cmd(command: str) -> None:
 
 
 def install_dependencies(abs_path: Path) -> None:
+    # fetch info about the linux system
+    os_info = exec_cmd('cat /etc/os-release').stdout.read().decode().splitlines()
+    
+    # loop until the ID= line i found
+    # which contains the distro name
+    system = None
+    for info in os_info:
+        if info.startswith('ID='):
+            system = info[3:].lower()
+    
+    # if the system is None it was not
+    # identified in /etc/os-release
+    if system is None:
+        Console.error_msg('unable to identify linux distro', True)
+    
+    # if the system is arch based use pacman
+    elif system == 'arch':
+        exec_cmd('sudo pacman -S --noconfirm --needed jdk-openjdk')
+    
+    # if the system is not arch try installing 
+    # default-jdk using the apt package manager
+    else:
+        exec_cmd('apt-get install -y default-jdk')
+
+    # check if java is installed    
+    if not exec_cmd('which java').stdout.read():
+        Console.error_msg('unable to install java openjdk', True)
+
     # set the requiremments path
     requirements_path = Path(abs_path, 'requirements.txt')
     
