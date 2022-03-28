@@ -20,37 +20,15 @@ def exec_cmd(command: str) -> None:
 
 
 def install_dependencies(abs_path: Path) -> None:
-    Console.debug_msg('fetching info about linux distro')
-    
-    # fetch info about the linux system
-    os_info = exec_cmd('cat /etc/os-release').stdout.read().decode().splitlines()
-    
-    # loop until the ID= line i found
-    # which contains the distro name
-    system = None
-    for info in os_info:
-        if info.startswith('ID='):
-            system = info[3:].lower()
-    
-    # if the system is None it was not
-    # identified in /etc/os-release
-    if system is None:
-        Console.error_msg('unable to identify linux distro', True)
-    
-    Console.debug_msg('installing java openjdk package')
+    Console.debug_msg('installing required packages')
 
-    # if the system is arch based use pacman
-    if system == 'arch':
-        exec_cmd('sudo pacman -S --noconfirm --needed jdk-openjdk')
-    
-    # if the system is not arch try installing 
-    # default-jdk using the apt package manager
-    else:
-        exec_cmd('apt-get install -y default-jdk')
+    # install all required packages using apt
+    exec_cmd('apt-get install -y python3 python3-pip default-jdk')
 
-    # check if java is installed    
-    if not exec_cmd('which java').stdout.read():
-        Console.error_msg('unable to install java openjdk', True)
+    # check if required the packages is installed
+    for executable in ['java', 'python3', 'pip3']:
+        if not exec_cmd('which %s' % executable).stdout.read():
+            Console.error_msg('unable to install java openjdk', True)
 
     # set the requiremments path
     requirements_path = Path(abs_path, 'requirements.txt')
@@ -95,6 +73,7 @@ def main(abs_path: Path):
 
 
 if __name__ == '__main__':
+    # make sure setup.py is run as root
     if os.geteuid() != 0:
         Console.error_msg('must run setup.py as root', True)
 
