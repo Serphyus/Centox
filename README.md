@@ -17,7 +17,7 @@ modified their default shortcuts.
 ## Disclaimer
 
 This project was designed for testing purposes __ONLY__ and is not to be used without explicit permission.
-Hacking without permission not encouraged and the author is not responsible for any illegal use of this tool.
+Hacking without permission is not encouraged and the author is not responsible for any illegal use of this tool.
 
 ## Installation
 
