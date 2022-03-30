@@ -8,8 +8,8 @@
 
 Centox is an injection handler written in python3 and is designed to provide a collection of injection
 payloads written for the [USB Rubber ducky](https://shop.hak5.org/products/usb-rubber-ducky-deluxe/)
-which was designed by [Hak5](https://shop.hak5.org/). This project comes with a collection of payloads
-for establishing remote access, deploying and running executables and more in as short time as possible.
+which was designed by [Hak5](https://shop.hak5.org/). This project contains payloads designed for 
+establishing remote access, deploying and running executables and more in as short time as possible.
 Centox comes with payloads designed Windows, Mac and Linux with the assumption that the target has not
 modified their default shortcuts.
 
@@ -48,7 +48,7 @@ generate   generates the current payload
 help       shows this help message
 ```
 
-how to generate payload:
+how to generate payloads:
 ```
 [Centox] $ use windows/shell/powershell
  
