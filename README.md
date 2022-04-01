@@ -76,5 +76,6 @@ windows_admin  false
 
 ## Compatibility
 - [x] USB Rubber Ducky
-- [ ] Arduino Injectors
+- [ ] O.MG Cable
 - [ ] Bash Bunny
+- [ ] Arduino Injectors
