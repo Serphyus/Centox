@@ -376,10 +376,10 @@ class Handler:
             command = command.lower()
 
             if command in self._callbacks:
-                # try:
+                try:
                     # execute callback assosiated with command
-                self._callbacks[command](*args)
-                # except TypeError:
-                    # Console.error_msg('too many arguments')
+                    self._callbacks[command](*args)
+                except TypeError:
+                    Console.error_msg('too many arguments')
             else:
                 Console.error_msg('invalid command: %s' % command)
