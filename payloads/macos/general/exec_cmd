@@ -6,6 +6,8 @@ STRING terminal
 DELAY 100
 ENTER
 DELAY 400
-STRING {command}
+STRING {command}{close_terminal}
 DELAY 50
 ENTER
+DELAY 200
+COMMAND w
