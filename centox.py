@@ -30,7 +30,6 @@ def check_dependencies() -> None:
 
 
 def main(abs_path: Path) -> None:
-    # checks for dependencies
     check_dependencies()
 
     # create the handler

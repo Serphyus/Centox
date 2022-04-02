@@ -1,18 +1,41 @@
 {
-    "payload_args": {
-        "start_delay": 500,
-        "windows_admin": "false",
-        "close_bash": "true"
-    },
-
-    "special_args": {
-        "windows_admin": {
-            "true": "CTRL-SHIFT ENTER\nDELAY 500\nSHIFT TAB\nDELAY 100\nENTER",
-            "false": "ENTER"
+    "globals": {
+        "typing_delay_average": {
+            "type": "int",
+            "default": "",
+            "values": null
         },
-        "close_bash": {
-            "true": " & exit",
-            "false": ""
+
+        "typing_delay_offset": {
+            "type": "int",
+            "default": "25",
+            "values": null
+        }
+    },
+    
+    "payload": {
+        "start_delay": {
+            "type": "int",
+            "default": "500",
+            "values": null
+        },
+
+        "windows_admin": {
+            "type": "str",
+            "default": "false",
+            "values": {
+                "true": "CTRL-SHIFT ENTER\nDELAY 500\nSHIFT TAB\nDELAY 100\nENTER",
+                "false": "ENTER"
+            }
+        },
+        
+        "close_terminal": {
+            "type": "str",
+            "default": "true",
+            "values": {
+                "true": " &! exit",
+                "false": ""
+            }
         }
     }
 }

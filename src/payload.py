@@ -1,12 +1,12 @@
 from pathlib import Path
 from string import Formatter
-from typing import Dict
+from typing import Dict, Sequence
 
 
 class Payload:
-    def __init__(self, path: Path, defaults_args: dict) -> None:
+    def __init__(self, path: Path, defaults: dict) -> None:
         self._path = path
-        self._default_args = defaults_args
+        self._defaults = defaults
         
         # read file content and find all its keyowrds
         self._content = self._read_file()
@@ -29,7 +29,11 @@ class Payload:
             if key not in kwargs and key is not None:
                 # check if keyword value exist in default_args
                 # and set it as the kwargs[key] else ''
-                kwargs[key] = self._default_args['payload_args'].get(key, '')
+
+                value = self._defaults.get(key, '')
+                if value:
+                    value = value['default']
+                kwargs[key] = value
 
         # return all argument created with the kwargs
         return kwargs
@@ -45,18 +49,17 @@ class Payload:
         return self._kwargs
     
 
-    def parse(self) -> str:
-        # create a dict containing the final
-        # kwargs to parse payload content with
+    def parse(self) -> Sequence[str]:
         final_kwargs = {}
 
-        # check if any keyword matches a special argument
-        # for then to change the value to the specail arg
+        # check if any of the payloads arguments matches any
+        # default argument that contains assigned values and
+        # update their value for the final_kwargs.
         for key, value in self._kwargs.items():
-            if key in self._default_args['special_args']:
-                value = self._default_args['special_args'][key][value]
+            if key in self._defaults:
+                if self._defaults[key]['values'] is not None:
+                    value = self._defaults[key]['values'][value]
             final_kwargs[key] = value
-            
-        # format the file content with the kwargs
-        # and return the formatted file content
-        return self._content.format(**final_kwargs)
+
+        # return the formatted payload contents as an array of lines
+        return self._content.format(**final_kwargs).splitlines()
