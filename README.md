@@ -78,4 +78,3 @@ windows_admin  false
 - [x] USB Rubber Ducky
 - [ ] O.MG Cable
 - [ ] Bash Bunny
-- [ ] Arduino Injectors
