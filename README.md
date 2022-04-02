@@ -73,3 +73,8 @@ windows_admin  false
 [*] compiling payload to injection binary...
 [*] injection compiled successfully -> /home/user/inject.bin
 ```
+
+## Compatibility
+- [x] USB Rubber Ducky
+- [ ] O.MG Cable
+- [ ] Bash Bunny
