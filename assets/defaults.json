@@ -29,11 +29,20 @@
             }
         },
         
-        "close_terminal": {
+        "run_background": {
             "type": "str",
             "default": "true",
             "values": {
                 "true": " &! exit",
+                "false": ""
+            }
+        },
+        
+        "close_mac_shell": {
+            "type": "str",
+            "default": "true",
+            "values": {
+                "true": "DELAY 400\nCOMMAND w",
                 "false": ""
             }
         }

