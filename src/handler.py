@@ -21,7 +21,7 @@ class Handler:
         self._current_payload: Payload = None
 
         # set directory where payloads are stored
-        self._payload_dir = Path(self._abs_path, 'assets', 'payloads')
+        self._payload_dir = Path(self._abs_path, 'payloads')
 
         # locate all available payloads and remove the prefix
         Console.debug_msg('locating available payloads')
@@ -42,13 +42,13 @@ class Handler:
 
         # load defaults.json file
         Console.debug_msg('loading defaults config')
-        self._defaults = self._load_defaults()
+        self._defaults = self._load_defaults(Path(self._abs_path, 'assets', 'defaults.json'))
 
         # bind command callbacks
         self._bind_callbacks()
 
         # create compiler for payloads
-        self._compiler = Compiler(Path(self._abs_path, 'assets', 'bin', 'encoder.jar'))
+        self._compiler = Compiler(Path(self._abs_path, 'bin', 'encoder.jar'))
 
         # set the handlers global arguments
         self._global_args = {}
@@ -56,10 +56,7 @@ class Handler:
             self._global_args[key] = value['default']
 
 
-    def _load_defaults(self) -> None:
-        # set defaults file path
-        defaults_path = Path(self._abs_path, 'assets', 'defaults.json')
-        
+    def _load_defaults(self, defaults_path: Path) -> None:
         # check if defaults exists
         if not defaults_path.is_file():
             Console.error_msg('unable to locate file: %s' % defaults_path.name, True)

