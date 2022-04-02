@@ -1,4 +1,4 @@
-REM Executes a one line command in powershell
+REM Executes command in powershell
 DELAY {start_delay}
 GUI r
 DELAY 350

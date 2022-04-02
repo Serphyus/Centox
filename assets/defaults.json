@@ -42,7 +42,7 @@
             "type": "str",
             "default": "true",
             "values": {
-                "true": "DELAY 400\nCOMMAND w",
+                "true": "DELAY 500\nCOMMAND w",
                 "false": ""
             }
         }

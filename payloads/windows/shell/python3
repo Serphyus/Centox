@@ -1,4 +1,4 @@
-REM Creates and executes a reverse shell in python
+REM Creates a reverse shell using python3
 DELAY {start_delay}
 GUI r
 DELAY 350

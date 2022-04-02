@@ -1,4 +1,4 @@
-REM Creates and executes a reverse shell in python
+REM Creates a reverse shell using Python2
 DELAY {start_delay}
 CTRL-ALT t
 DELAY 400
