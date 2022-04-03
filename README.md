@@ -19,6 +19,11 @@ modified their default shortcuts.
 This project was designed for testing purposes __ONLY__ and is not to be used without explicit permission.
 Hacking without permission is not encouraged and the author is not responsible for any illegal use of this tool.
 
+## Compatibility
+- [x] USB Rubber Ducky
+- [x] O.MG Cable
+- [x] Bash Bunny
+
 ## Installation
 
 Downloading and running setup.py:
@@ -39,10 +44,10 @@ the handler commands can be listed using the `help` command:
 [Centox] $ help
 
 Command    Description
----------  -------------------------------
-list       lists all available payloads
+---------  ---------------------------------------------
+list       lists all available: payloads layouts formats
 use        choose a payload to use
-set        sets payload argument variables
+set        sets global or payload arguments
 options    show all available arguments
 generate   generates the current payload
 help       shows this help message
@@ -73,8 +78,3 @@ windows_admin  false
 [*] compiling payload to injection binary...
 [*] injection compiled successfully -> /home/user/inject.bin
 ```
-
-## Compatibility
-- [x] USB Rubber Ducky
-- [ ] O.MG Cable
-- [ ] Bash Bunny
