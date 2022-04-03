@@ -36,19 +36,15 @@ class Handler:
         self._available_payloads.sort()
         self._available_payloads.reverse()
 
-        # load layouts file
-        with open(Path(abs_path, 'assets', 'layouts'), 'r') as file:
-            self._layouts = [layout.strip() for layout in file.readlines()]
-
         # load defaults.json file
         Console.debug_msg('loading defaults config')
-        self._defaults = self._load_defaults(Path(self._abs_path, 'assets', 'defaults.json'))
+        self._defaults = self._load_defaults(Path(self._abs_path, 'config', 'defaults.json'))
 
         # bind command callbacks
         self._bind_callbacks()
 
         # create compiler for payloads
-        self._compiler = Compiler(Path(self._abs_path, 'bin', 'encoder.jar'))
+        self._compiler = Compiler(Path(self._abs_path, 'encoder'))
 
         # set the handlers global arguments
         self._global_args = {}
@@ -86,7 +82,7 @@ class Handler:
 
     def _bind_callbacks(self) -> None:
         self._callbacks = {
-            'list': self.list_payloads,
+            'list': self.list_available,
             'use': self.use_payload,
             'set': self.set_argument,
             'options': self.show_options,
@@ -113,7 +109,7 @@ class Handler:
         )
 
 
-    def list_payloads(self) -> None:
+    def _list_payloads(self) -> None:
         # creates an empty table which will contain
         # elements with [path, description] contents
         payload_table = []
@@ -155,6 +151,38 @@ class Handler:
         )
         
         print('\n' + table)
+
+
+    def _list_layouts(self) -> None:
+        print('\n Keyboard Layouts\n ----------------')
+        for keyboard_layout in self._compiler.layouts:
+            print(keyboard_layout)
+        print()
+
+
+    def _list_formats(self) -> None:
+        print('\n Payload Formats\n ---------------')
+        for payload_format in self._compiler.formats:
+            print(' - %s' % payload_format)
+        print()
+
+    
+    def list_available(self, choice: str) -> None:
+        if choice == 'payloads':
+            self._list_payloads()
+        
+        elif choice == 'layouts':
+            self._list_layouts()
+            
+        elif choice == 'formats':
+            self._list_formats()
+        
+        else:
+            Console.error_msg('invalid choice: %s choice' % choice)
+            print('\n Valid Choices\n -------------')
+            print(' - payloads')
+            print(' - layouts')
+            print(' - formats')
 
 
     def use_payload(self, payload: str = None) -> None:
@@ -276,15 +304,11 @@ class Handler:
             Console.error_msg('no payload selected')
             return
         
-        # ##################################### #
-        # add export to raw option to account   #
-        # for the bash bunny/o.mg cable decices #
-        # ##################################### #
-
         # use an argument parser for handling arguments
         parser = argparse.ArgumentParser(add_help=False, exit_on_error=False)
         parser.add_argument('-o', dest='output', type=str, default='inject.bin')
-        parser.add_argument('-l', dest='layout', type=str)
+        parser.add_argument('-l', dest='layout', type=str, default='')
+        parser.add_argument('-f', dest='format', type=str, default='ducky')
         parser.add_argument('-h', dest='show_help', action='store_true')
 
         # parse command arguments
@@ -299,33 +323,33 @@ class Handler:
             return
         
         if args.show_help:
-            # create a help table 
-            # show a message of all available
-            # command arguments
+            # create a help table containing a table of all
+            # generate arguments and their descriptions
             help_table = [
                 ['-o', 'spesifies the output file of the injection'],
                 ['-l', 'specifies the keyboard layout for the injection'],
+                ['-f', 'specifies the payload format to: ' + ', '.join(self._compiler.formats)],
                 ['-h', 'shows this help message']
             ]
+            
             print('\n' + tabulate(help_table, ('Arg', 'Description')))
 
-        elif args.output is None:
+        elif not args.output:
             Console.error_msg('missing output argument: -o')
 
-        elif args.layout is None:
-            Console.error_msg('missing layout argument: -l')
+        elif args.layout not in self._compiler.layouts:
+            Console.error_msg('invalid layout argument: %s' % args.layout)
+        
+        elif args.format not in self._compiler.formats:
+            Console.error_msg('invalid format argument: %s' % args.format)
 
         else:
-            # make sure the given layout argument is valid
-            if args.layout not in self._layouts:
-                Console.error_msg('invalid keyboard layout: %s' % args.layout)
-                return
-
             # compile the current payload
             self._compiler.compile_payload(
                 self._current_payload,
                 Path(args.output),
                 args.layout,
+                args.format,
                 self._global_args
             )
 
@@ -334,7 +358,7 @@ class Handler:
         # output a help menu of all available
         # commands and their usage description
         help_table = [
-            ['list', 'lists all available payloads'],
+            ['list', 'lists all available: payloads, layouts, formats'],
             ['use', 'choose a payload to use'],
             ['set', 'sets global or payload arguments'],
             ['options', 'show all available arguments'],
@@ -380,6 +404,6 @@ class Handler:
                     # execute callback assosiated with command
                     self._callbacks[command](*args)
                 except TypeError:
-                    Console.error_msg('too many arguments')
+                    Console.error_msg('invalid number of arguments')
             else:
                 Console.error_msg('invalid command: %s' % command)

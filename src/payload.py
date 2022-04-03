@@ -61,5 +61,13 @@ class Payload:
                     value = self._defaults[key]['values'][value]
             final_kwargs[key] = value
 
-        # return the formatted payload contents as an array of lines
-        return self._content.format(**final_kwargs).splitlines()
+        # create a list that will contain each line
+        # of the payload after removing the comments
+        payload_lines = []
+        
+        # looop through formatted payload lines
+        for line in self._content.format(**final_kwargs).splitlines():
+            if not line.startswith('REM '):
+                payload_lines.append(line)
+
+        return payload_lines
