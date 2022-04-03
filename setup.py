@@ -56,7 +56,7 @@ def install_centox(abs_path: Path) -> None:
 
     # copies all required files to the centox dir using
     # the -p argument to preserve all current attributes
-    exec_cmd('cp -rp {0}/assets {0}/bin {0}/payloads {0}/src {0}/centox.py {1}'.format(abs_path, centox_dest))
+    exec_cmd('cp -rp {0}/assets {0}/encoder {0}/config {0}/payloads {0}/src {0}/centox.py {1}'.format(abs_path, centox_dest))
     
     # create executable file
     with open('/usr/bin/centox', 'w') as file:

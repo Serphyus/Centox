@@ -1,5 +1,6 @@
 import os
 import subprocess
+from shutil import move
 from random import randint
 from pathlib import Path
 from tempfile import TemporaryDirectory
@@ -57,26 +58,8 @@ class Compiler:
 
         Console.debug_msg('converting payload to format: %s' % payload_format)
 
-        # if the payload format is a bash bunny
-        # add QUACK to the beginning of each line
-        if payload_format == 'bunny':
-            for index, line in enumerate(parsed_lines):
-                parsed_lines[index] = 'Q ' + line
-            
-            parsed_lines.insert(0, 'LED ATTACK')
-            parsed_lines.insert(1, 'Q SET_LANGUAGE %s' % keyboard_layout)
-            parsed_lines.append('LED FINISH')
-
-        # omg payloads requires no tweaking from the
-        # ducky format but it needs to set a ducky_lang
-        # after an initial delay
-        elif payload_format == 'omg':
-            layout_line = 'DUCKY_LANG %s ' % keyboard_layout
-            if not parsed_lines[0].startswith('DELAY '):
-                Console.warning_msg('no delay detected before setting the ducky_lang')
-                parsed_lines.insert(0, layout_line)
-            else:            
-                parsed_lines.insert(1, layout_line)
+        # create an empty list for final payload
+        final_payload = []
 
         # if a typing delay is used to evade keystroke injection prevention
         # software then create a funciton to generate random delays for each
@@ -117,6 +100,21 @@ class Compiler:
         else:
             # if not delay is spesified leave the lines unchanged
             final_payload = parsed_lines
+
+        # if the payload format is a bash bunny
+        # add QUACK to the beginning of each line
+        if payload_format == 'bunny':
+            for index, line in enumerate(final_payload):
+                final_payload[index] = 'Q ' + line
+            
+            final_payload.insert(0, 'LED ATTACK')
+            final_payload.insert(1, 'Q SET_LANGUAGE %s' % keyboard_layout)
+            final_payload.append('LED FINISH')
+
+        # omg payloads requires no tweaking from the ducky
+        # format but it needs a layout set with ducky_lang
+        elif payload_format == 'omg':
+            final_payload.insert(0, 'DUCKY_LANG %s ' % keyboard_layout)
         
         # write all lines of the final paylaod to
         # a file stored in a temporary folder
@@ -186,4 +184,8 @@ class Compiler:
             else:
                 Console.debug_msg('injection compiled successfully -> %s' % output)
         else:
-            os.system('mv %s %s' % (payload_path, output))
+            try:
+                move(payload_path, output)
+                Console.debug_msg('payload has been written to -> %s' % output)
+            except OSError:
+                Console.error_msg('unable to move paylaod to -> %s' % output)

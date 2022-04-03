@@ -156,7 +156,7 @@ class Handler:
     def _list_layouts(self) -> None:
         print('\n Keyboard Layouts\n ----------------')
         for keyboard_layout in self._compiler.layouts:
-            print(keyboard_layout)
+            print(' - %s' % keyboard_layout)
         print()
 
 
@@ -167,7 +167,7 @@ class Handler:
         print()
 
     
-    def list_available(self, choice: str) -> None:
+    def list_available(self, choice: str = None) -> None:
         if choice == 'payloads':
             self._list_payloads()
         
@@ -209,7 +209,7 @@ class Handler:
             # checks if string value is a number and
             # checks that its positive since isdigit
             # returns false with non base10 letters
-            if not value.isdigit():
+            if value and not value.isdigit():
                 Console.error_msg('%s must be a positive int value' % name)
                 return False
         
@@ -306,7 +306,7 @@ class Handler:
         
         # use an argument parser for handling arguments
         parser = argparse.ArgumentParser(add_help=False, exit_on_error=False)
-        parser.add_argument('-o', dest='output', type=str, default='inject.bin')
+        parser.add_argument('-o', dest='output', type=str, default='')
         parser.add_argument('-l', dest='layout', type=str, default='')
         parser.add_argument('-f', dest='format', type=str, default='ducky')
         parser.add_argument('-h', dest='show_help', action='store_true')
