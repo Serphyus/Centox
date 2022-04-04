@@ -6,12 +6,14 @@
   Centox
 </h1>
 
-Centox is an injection handler written in python3 and is designed to provide a collection of injection
-payloads written for the [USB Rubber ducky](https://shop.hak5.org/products/usb-rubber-ducky-deluxe/)
-which was designed by [Hak5](https://shop.hak5.org/). This project contains payloads designed for 
-establishing remote access, deploying and running executables and more in as short time as possible.
-Centox comes with payloads designed for Windows, Mac and Linux with the assumption that the target has
-not modified their default shortcuts.
+Centox is an injection handler written in python3 and is designed to generate keystroke injection payloads
+to deploy using a [USB Rubber ducky](https://shop.hak5.org/products/usb-rubber-ducky-deluxe/),
+[O.MG Cable](https://shop.hak5.org/collections/mischief-gadgets/products/o-mg-cable-usb-a) or
+[Bash Bunny](https://shop.hak5.org/products/bash-bunny) which was all designed by [Hak5](https://shop.hak5.org/).
+Each payload was originally written for the rubber ducky but can be converted to 3 formats: ducky, bunny and omg.
+This project contains payloads designed for establishing remote access, deploying and running executables and
+more in as short time as possible. Centox comes with payloads designed for Windows, Mac and Linux with the
+assumption that the target has not modified their default shortcuts.
 
 ## Disclaimer
 
