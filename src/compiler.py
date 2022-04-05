@@ -80,6 +80,7 @@ class Compiler:
 
             if max_delay == 0:
                 Console.warning_msg('disabling typing delay since max delay must be > 0')
+                final_payload = parsed_lines
             else:
                 # create a lambda function that gives a random typing delay
                 create_delay = lambda: randint(min_delay, max_delay)

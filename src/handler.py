@@ -5,7 +5,6 @@ import shlex
 import readline
 import argparse
 from pathlib import Path
-from tabulate import tabulate
 from typing import Sequence
 
 from .console import Console
@@ -91,23 +90,7 @@ class Handler:
             'clear': Console.clear_screen,
             'exit': lambda: sys.exit()
         }
-
-
-    def _create_table(self,
-            keys: Sequence[str],
-            table: Sequence[Sequence[str]]
-        ) -> str:
-
-        allignment = []
-        if table:
-            for _ in keys:
-                allignment.append('left')
-
-        return tabulate(
-            table, keys,
-            colalign=allignment
-        )
-
+    
 
     def _list_payloads(self) -> None:
         # creates an empty table which will contain
@@ -144,10 +127,9 @@ class Handler:
                 payload_table.append(table_row)
         
         # create a table to output the data
-        table = tabulate(
-            payload_table,
+        table = Console.create_table(
             ['Payload', 'Description'],
-            colalign=('left', 'left')
+            payload_table,
         )
         
         print('\n' + table)
@@ -291,8 +273,8 @@ class Handler:
 
         # create the tables of data with all arguments and values
         table = (
-            self._create_table(['Global Argument', 'Value'], globals_table),
-            self._create_table(['Payload Argument', 'Value'], payload_table)
+            Console.create_table(['Global Argument', 'Value'], globals_table),
+            Console.create_table(['Payload Argument', 'Value'], payload_table)
         )
 
         print('%s\n\n%s' % table)
@@ -332,7 +314,7 @@ class Handler:
                 ['-h', 'shows this help message']
             ]
             
-            print('\n' + tabulate(help_table, ('Arg', 'Description')))
+            print('\n' + Console.create_table(('Arg', 'Description'), help_table))
 
         elif not args.output:
             Console.error_msg('missing output argument: -o')
@@ -366,7 +348,7 @@ class Handler:
             ['help', 'shows this help message']
         ]
         
-        print('\n' + tabulate(help_table, ('Command', 'Description')))
+        print('\n' + Console.create_table(('Command', 'Description'), help_table))
 
 
     def _get_user_input(self) -> Sequence[str]:

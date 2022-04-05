@@ -1,4 +1,6 @@
 import sys
+from tabulate import tabulate
+from typing import Sequence
 
 
 class Console:
@@ -25,10 +27,22 @@ class Console:
 
 
     @staticmethod
-    def reset_lines(lines: int) -> None:
-        print('\x1b[%sA\x1b[0J' % lines, end='')
-
-
-    @staticmethod
     def clear_screen() -> None:
         print('\x1b[H\x1b[2J\x1b[3J', end='')
+    
+
+    @staticmethod
+    def create_table(
+            keys: Sequence[str],
+            table: Sequence[Sequence[str]]
+        ) -> str:
+
+        allignment = []
+        if table:
+            for _ in keys:
+                allignment.append('left')
+
+        return tabulate(
+            table, keys,
+            colalign=allignment
+        )
