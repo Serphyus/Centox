@@ -1,4 +1,3 @@
-import sys
 from tabulate import tabulate
 from typing import Sequence
 
@@ -12,8 +11,6 @@ class Console:
     @classmethod
     def error_msg(cls, msg: str, exit_call: bool = False) -> None:
         print(cls._log_msg('-', '91', msg))
-        if exit_call:
-            sys.exit()
 
 
     @classmethod

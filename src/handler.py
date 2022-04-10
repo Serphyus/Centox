@@ -54,7 +54,8 @@ class Handler:
     def _load_defaults(self, defaults_path: Path) -> None:
         # check if defaults exists
         if not defaults_path.is_file():
-            Console.error_msg('unable to locate file: %s' % defaults_path.name, True)
+            Console.error_msg('unable to locate file: %s' % defaults_path.name)
+            sys.exit()
         
         # read the defaults.json config
         with open(defaults_path, 'r') as file:

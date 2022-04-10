@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 import os
+import sys
 import platform
 from pathlib import Path
 
@@ -26,7 +27,8 @@ def check_dependencies() -> None:
         # checks if any of the paths in the environment
         # variable PATH has the dependency file in it
         if not any(map(lambda p: Path(p, executable).is_file(), env_paths)):
-            Console.error_msg('unable to locate: %s\n' % executable, True)
+            Console.error_msg('unable to locate: %s\n' % executable)
+            sys.exit()
 
 
 def main(abs_path: Path) -> None:
@@ -47,7 +49,8 @@ if __name__ == '__main__':
     
     # check if python version is 3.9 or higher
     if version[0] < 3 or version[1] < 9:
-        Console.error_msg('centox requires python 3.9 or higher', True)
+        Console.error_msg('centox requires python 3.9 or higher')
+        sys.exit()
 
     # get abs path of running python file
     abs_path = Path(__file__).resolve().parent
