@@ -1,4 +1,5 @@
 import os
+import sys
 import platform
 import subprocess
 from pathlib import Path
@@ -29,7 +30,8 @@ def install_dependencies(abs_path: Path) -> None:
     # check if required the packages is installed
     for executable in ['java', 'python3', 'pip3']:
         if not exec_cmd('which %s' % executable).stdout.read():
-            Console.error_msg('unable to install java openjdk', True)
+            Console.error_msg('unable to install java openjdk')
+            sys.exit()
 
     # set the requiremments path
     requirements_path = Path(abs_path, 'requirements.txt')
@@ -76,7 +78,8 @@ def main(abs_path: Path):
 if __name__ == '__main__':
     # make sure setup.py is run as root
     if os.geteuid() != 0:
-        Console.error_msg('must run setup.py as root', True)
+        Console.error_msg('must run setup.py as root')
+        sys.exit()
 
     # get current python version
     version = tuple(map(int, platform.python_version_tuple()[:2]))
