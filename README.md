@@ -17,7 +17,7 @@ assumption that the target has not modified their default shortcuts.
 
 ## Disclaimer
 
-This project was designed for testing purposes __ONLY__ and is not to be used without explicit permission.
+This project was designed for educational purposes __ONLY__ and is not to be used without explicit permission.
 Hacking without permission is not encouraged and the author is not responsible for any illegal use of this tool.
 
 ## Compatibility
