@@ -1,6 +1,6 @@
-<p align="center">
+<div align="center">
     <img src="/assets/media/logo.png" height="200">
-</p>
+</div>
 
 <h1 align="center">
   Centox
