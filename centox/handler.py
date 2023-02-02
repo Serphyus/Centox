@@ -2,7 +2,6 @@ import os
 import sys
 import json
 import shlex
-import readline
 import argparse
 from pathlib import Path
 from typing import Sequence
@@ -14,13 +13,14 @@ from .compiler import Compiler
 
 class Handler:
     def __init__(self, abs_path: Path) -> None:
-        self._abs_path = abs_path        
+        self._abs_path = abs_path
+        self._assets_path = Path(self._abs_path, 'assets')
         
         # defaults selected payload to None
         self._current_payload: Payload = None
 
         # set directory where payloads are stored
-        self._payload_dir = Path(self._abs_path, 'payloads')
+        self._payload_dir = Path(self._assets_path, 'payloads')
 
         # locate all available payloads and remove the prefix
         Console.debug_msg('locating available payloads')
@@ -37,13 +37,13 @@ class Handler:
 
         # load defaults.json file
         Console.debug_msg('loading defaults config')
-        self._defaults = self._load_defaults(Path(self._abs_path, 'config', 'defaults.json'))
+        self._defaults = self._load_defaults(Path(self._assets_path, 'config/defaults.json'))
 
         # bind command callbacks
         self._bind_callbacks()
 
         # create compiler for payloads
-        self._compiler = Compiler(Path(self._abs_path, 'encoder'))
+        self._compiler = Compiler(Path(self._assets_path, 'encoder'))
 
         # set the handlers global arguments
         self._global_args = {}
