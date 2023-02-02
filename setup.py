@@ -30,7 +30,7 @@ def install_dependencies(abs_path: Path) -> None:
     # check if required the packages is installed
     for executable in ['java', 'python3', 'pip3']:
         if not exec_cmd('which %s' % executable).stdout.read():
-            Console.error_msg('unable to install java openjdk')
+            Console.error_msg('unable to install all dependencies')
             sys.exit()
 
     # set the requiremments path
