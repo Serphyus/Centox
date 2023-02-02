@@ -64,7 +64,7 @@ def install_centox(abs_path: Path) -> None:
 
     # give correct file permissions
     exec_cmd('chmod 755 /usr/bin/centox')
-    exec_cmd('chmod -R 744 /usr/share/centox')
+    exec_cmd('chmod -R 755 /usr/share/centox')
 
     Console.debug_msg('Centox installed successfully')
 
