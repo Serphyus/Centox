@@ -21,7 +21,7 @@ This project was designed for educational purposes __ONLY__ and is not to be use
 Hacking without permission is not encouraged and the author is not responsible for any illegal use of this tool.
 
 ## Compatibility
-- [x] USB Rubber Ducky
+- [x] USB Rubber Ducky (Previous Model)
 - [x] O.MG Cable
 - [x] Bash Bunny
 
