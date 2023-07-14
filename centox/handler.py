@@ -6,7 +6,6 @@ import logging
 from pathlib import Path
 from typing import Sequence
 
-import prompt_toolkit
 from tabulate import tabulate
 
 from centox.payload import Payload
@@ -113,6 +112,10 @@ class Handler:
             self._generator.typing_delay_offset = value
         
         else:
+            if self._current_payload is None:
+                logging.error(f"{arg} is not a valid argument")
+                return
+            
             self._current_payload.set_arg(arg, value)
     
     
@@ -147,28 +150,35 @@ class Handler:
             logging.error("no payload has been selected")
             return
 
+        logging.debug("generating payload")
         payload = self._generator.generate(self._current_payload)
 
         if output_path is None:
             print(f"\n{payload}")
-        else:
-            output_path = Path(output_path)
+            return
+        
+        output_path = Path(output_path)
+        
+        if output_path.is_file():
+            logging.warning(f"file already exists")
+
+            user_input = input("overwrite file [Y/N] ").lower().strip()
+
+            if user_input == "n":
+                return
             
-            if output_path.is_file():
-                logging.warning(f"file already exists: {output_path}")
+            elif user_input != "y":
+                logging.error("invalid choice")
 
-                user_input = ""
-                while not user_input:
-                    user_input = input("overwrite file [Y/N] ").lower().strip()
+        try:
+            output_path.touch()
+        except OSError:
+            logging.error("unable to create output file")
+        
+        with open(output_path, "w") as file:
+            file.write(payload)
 
-                    if user_input == "y":
-                        continue
-                    if user_input == "n":
-                        return
-                    
-                    user_input = ""
 
-    
     def show_help(self) -> None:
         help_table = [
             ("list", "lists all available payloads"),
