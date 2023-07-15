@@ -98,6 +98,7 @@ class Handler:
             logging.error(f"invalid payload: {payload}")
             return
         
+        logging.debug(f"initializing payload: {payload}")
         self._current_payload = self._available_payload[payload]
         self._current_payload.reset()
 
@@ -154,7 +155,9 @@ class Handler:
         payload = self._generator.generate(self._current_payload)
 
         if output_path is None:
-            print(f"\n{payload}")
+            print(f"\nPayload output")
+            print("==============")
+            print(payload)
             return
         
         output_path = Path(output_path)
@@ -169,11 +172,13 @@ class Handler:
             
             elif user_input != "y":
                 logging.error("invalid choice")
-
+            
         try:
+            logging.debug(f"creating file: {output_path}")
             output_path.touch()
         except OSError:
             logging.error("unable to create output file")
+            return
         
         with open(output_path, "w") as file:
             file.write(payload)
