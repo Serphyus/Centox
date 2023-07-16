@@ -6,24 +6,28 @@
   Centox
 </h1>
 
-Centox is an injection handler written in python3 and is designed to generate keystroke injection payloads
-to deploy using a [USB Rubber ducky](https://shop.hak5.org/products/usb-rubber-ducky-deluxe/),
-[O.MG Cable](https://shop.hak5.org/products/omg-cable) or
-[Bash Bunny](https://shop.hak5.org/products/bash-bunny) which was all designed by [Hak5](https://shop.hak5.org/).
-Each payload was originally written for the rubber ducky but can be converted to 3 formats: ducky, bunny and omg.
-This project contains payloads designed for establishing remote access, deploying and running executables and
-more in as short time as possible. Centox comes with payloads designed for Windows, Mac and Linux with the
-assumption that the target has not modified their default shortcuts.
+Centox is an injection handler written in python3 and is designed to generate
+keystroke injection payloads to deploy using any [Hak5](https://shop.hak5.org/)
+product that supports their ducky script language. After generating the payload
+the user can then take the output/file to the [Hak5 PayloadStudio](https://payloadstudio.hak5.org/)
+to be compiled. This project contains payloads designed for establishing remote
+access, deploying and running executables and more in as short time as possible.
+Centox comes with payloads designed for Windows, Mac and Linux with the assumption
+that the target has not modified their default shortcuts.
 
 ## Disclaimer
 
 This project was designed for educational purposes __ONLY__ and is not to be used without explicit permission.
 Hacking without permission is not encouraged and the author is not responsible for any illegal use of this tool.
 
-## Compatibility
-- [x] USB Rubber Ducky (Previous Model)
-- [x] O.MG Cable
+## Supported Devices
+- [x] USB Rubber Ducky
 - [x] Bash Bunny
+- [x] Key Croc
+- [x] Shark Jack
+- [x] Packet Squirrel
+- [x] LAN Turtle
+- [x] O.MG Cable
 
 ## Installation
 
