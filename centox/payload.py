@@ -38,11 +38,6 @@ class Payload:
         return self._manifest["description"]
 
 
-    @property
-    def require_admin(self) -> bool:
-        return self._manifest["require_admin"]
-
-    
     def set_arg(self, arg: str, value: str) -> None:
         if arg not in self._manifest["args"]:
             logging.error(f"{arg} is not a valid argument")

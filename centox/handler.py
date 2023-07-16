@@ -83,12 +83,11 @@ class Handler:
         for name, payload in self._available_payload.items():
             payload_table.append((
                 name,
-                payload.require_admin,
                 payload.description
             ))
 
         table = self._create_table(
-            ("Payload", "Admin", "Description"),
+            ("Payload", "Description"),
             payload_table
         )
         
@@ -128,8 +127,6 @@ class Handler:
         if self._current_payload is not None:
             output += self._current_payload.name
 
-        output += "\n\n"
-
         generator_args = [
             ("TYPING_DELAY", self._generator.typing_delay),
             ("TYPING_DELAY_OFFSET", self._generator.typing_delay_offset)
@@ -140,7 +137,7 @@ class Handler:
             generator_args
         )
         
-        output += f"{generator_output}"
+        output += f"\n\n{generator_output}"
 
         if self._current_payload is not None:
             payload_args = []
@@ -152,7 +149,7 @@ class Handler:
                 payload_args
             )
 
-            output += f"\n{payload_output}"
+            output += f"\n\n{payload_output}"
         
         print(output)
 
