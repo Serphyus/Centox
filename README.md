@@ -6,24 +6,28 @@
   Centox
 </h1>
 
-Centox is an injection handler written in python3 and is designed to generate keystroke injection payloads
-to deploy using a [USB Rubber ducky](https://shop.hak5.org/products/usb-rubber-ducky-deluxe/),
-[O.MG Cable](https://shop.hak5.org/products/omg-cable) or
-[Bash Bunny](https://shop.hak5.org/products/bash-bunny) which was all designed by [Hak5](https://shop.hak5.org/).
-Each payload was originally written for the rubber ducky but can be converted to 3 formats: ducky, bunny and omg.
-This project contains payloads designed for establishing remote access, deploying and running executables and
-more in as short time as possible. Centox comes with payloads designed for Windows, Mac and Linux with the
-assumption that the target has not modified their default shortcuts.
+Centox is an injection handler written in python3 and is designed to generate
+keystroke injection payloads to deploy using any [Hak5](https://shop.hak5.org/)
+product that supports their ducky script language. After generating the payload
+the user can then take the output/file to the [Hak5 PayloadStudio](https://payloadstudio.hak5.org/)
+to be compiled. This project contains payloads designed for establishing remote
+access, deploying and running executables and more in as short time as possible.
+Centox comes with payloads designed for Windows, Mac and Linux with the assumption
+that the target has not modified their default shortcuts.
 
 ## Disclaimer
 
 This project was designed for educational purposes __ONLY__ and is not to be used without explicit permission.
 Hacking without permission is not encouraged and the author is not responsible for any illegal use of this tool.
 
-## Compatibility
-- [x] USB Rubber Ducky (Previous Model)
-- [x] O.MG Cable
+## Supported Devices
+- [x] USB Rubber Ducky
 - [x] Bash Bunny
+- [x] Key Croc
+- [x] Shark Jack
+- [x] Packet Squirrel
+- [x] LAN Turtle
+- [x] O.MG Cable
 
 ## Installation
 
@@ -45,43 +49,39 @@ the handler commands can be listed using the `help` command:
 [Centox] $ help
 
 Command    Description
----------  ---------------------------------------------
-list       lists all available: payloads layouts formats
+---------  ------------------------------------
+list       lists all available payloads
 use        choose a payload to use
-set        sets global or payload arguments
-options    show all available arguments
+set        configure payload arguments
+options    show all available payload arguments
 generate   generates the current payload
 help       shows this help message
 ```
 
 how to generate payloads:
 ```
-[Centox] $ use windows/shell/powershell
+[Centox] $ use windows/shell/python
+[+] initializing payload: windows/shell/python
 
 [Centox] $ options
 
- Payload: windows/shell/powershell
+ Payload: windows/shell/python
 
-Global Argument       Value
---------------------  -------
-typing_delay_average
-typing_delay_offset   25
+Generator arguments    Value
+---------------------  -------
+TYPING_DELAY           0
+TYPING_DELAY_OFFSET    0
 
-Payload Argument    Value
-------------------  -------
-start_delay         500
-ip
-port
-windows_admin       false
+Payload arguments    Value
+-------------------  -------
+START_DELAY          3000
+RUN_DELAY            500
+IP
+PORT                 9999
 
-[Centox] $ set ip 192.168.68.42
+[Centox] $ set IP 192.168.68.42
 
-[Centox] $ set port 9999
-
-[Centox] $ generate -o /home/user/inject.bin -l no
-[*] created temporary folder -> /tmp/tmpti0d_l1u
-[*] converting payload to format: ducky
-[*] writing raw payload to -> /tmp/tmpti0d_l1u/payload
-[*] compiling payload to injection binary...
-[*] injection compiled successfully -> /home/user/inject.bin
+[Centox] $ generate ducky_payload
+[+] generating payload
+[+] creating file: ducky_payload
 ```

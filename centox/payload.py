@@ -1,73 +1,50 @@
+import json
+import logging
 from pathlib import Path
-from string import Formatter
-from typing import Dict, Sequence
+from contextlib import suppress
+from typing import Any, Dict
 
 
 class Payload:
-    def __init__(self, path: Path, defaults: dict) -> None:
-        self._path = path
-        self._defaults = defaults
+    def __init__(self, name: str, payload_dir: Path) -> None:
+        self._typing_delay = 0
+        self._typing_delay_offset = 0
+        self._name = name
+        self._payload_dir = payload_dir
+
+        self.reset()
+
+
+    def reset(self) -> None:
+        with open(Path(self._payload_dir, "manifest.json"), "r") as file:
+            self._manifest = json.load(file)
         
-        # read file content and find all its keyowrds
-        self._content = self._read_file()
-        self._kwargs = self._read_kwargs()
-
-
-    def _read_file(self) -> str:
-        # reads the payload file
-        with open(Path(self._path), 'r', encoding='utf-8') as file:
-            return file.read()
-
-
-    def _read_kwargs(self) -> Dict[str, str]: # add checking for payload args and boolean args ba>pa
-        # a list which holds all kwargs
-        kwargs = {}
-
-        # loop through each formattable keyword inside {...}
-        for key in map(lambda l: l[1], Formatter().parse(self._content)):
-            # check that the key does not repeat or is None
-            if key not in kwargs and key is not None:
-                # check if keyword value exist in default_args
-                # and set it as the kwargs[key] else ''
-
-                value = self._defaults.get(key, '')
-                if value:
-                    value = value['default']
-                kwargs[key] = value
-
-        # return all argument created with the kwargs
-        return kwargs
+        with open(Path(self._payload_dir, "payload"), "r") as file:
+            self._raw_payload = file.read()
 
 
     @property
-    def path(self) -> Path:
-        return self._path
+    def raw(self) -> str:
+        return self._raw_payload
 
 
     @property
-    def kwargs(self) -> Dict[str, str]:
-        return self._kwargs
-    
+    def name(self) -> str:
+        return self._name
 
-    def parse(self) -> Sequence[str]:
-        final_kwargs = {}
 
-        # check if any of the payloads arguments matches any
-        # default argument that contains assigned values and
-        # update their value for the final_kwargs.
-        for key, value in self._kwargs.items():
-            if key in self._defaults:
-                if self._defaults[key]['values'] is not None:
-                    value = self._defaults[key]['values'][value]
-            final_kwargs[key] = value
+    @property
+    def description(self) -> str:
+        return self._manifest["description"]
 
-        # create a list that will contain each line
-        # of the payload after removing the comments
-        payload_lines = []
-        
-        # looop through formatted payload lines
-        for line in self._content.format(**final_kwargs).splitlines():
-            if not line.startswith('REM '):
-                payload_lines.append(line)
 
-        return payload_lines
+    def set_arg(self, arg: str, value: str) -> None:
+        if arg not in self._manifest["args"]:
+            logging.error(f"{arg} is not a valid argument")
+            return
+
+        self._manifest["args"][arg] = value
+
+
+    def get_args(self) -> Dict[str, str]:
+        return self._manifest["args"]

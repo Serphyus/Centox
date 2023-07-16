@@ -1,6 +1,0 @@
-REM Executes command in powershell
-DELAY {start_delay}
-GUI r
-DELAY 350
-STRING cmd /c start /min powershell -w 1 "{command}"
-{windows_admin}
