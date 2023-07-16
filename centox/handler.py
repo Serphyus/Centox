@@ -37,6 +37,8 @@ class Handler:
 
 
     def _load_payloads(self) -> None:
+        logging.debug("loading ducky payloads")
+
         self._available_payload = {}
         self._payloads_dir = Path(self._working_dir, "assets/payloads")
 
@@ -176,6 +178,7 @@ class Handler:
         try:
             logging.debug(f"creating file: {output_path}")
             output_path.touch()
+        
         except OSError:
             logging.error("unable to create output file")
             return
@@ -245,7 +248,9 @@ class Handler:
                 try:
                     # execute callback assosiated with command
                     self._callbacks[command](*args)
+                
                 except TypeError:
                     logging.error("invalid number of arguments")
+            
             else:
                 logging.error(f"invalid command: {command}")
