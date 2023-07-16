@@ -140,7 +140,7 @@ class Handler:
             generator_args
         )
         
-        output += f"{generator_output}\n"
+        output += f"{generator_output}"
 
         if self._current_payload is not None:
             payload_args = []
@@ -152,9 +152,9 @@ class Handler:
                 payload_args
             )
 
-            output += f"\n{payload_output}\n"
+            output += f"\n{payload_output}"
         
-        print(output, end="")
+        print(output)
 
     
     def generate_payload(self, output_path: str = None) -> None:
