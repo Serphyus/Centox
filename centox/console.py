@@ -3,10 +3,10 @@ import logging
 
 class Logger(logging.Formatter):
     FORMATS = {
-        logging.INFO:     "\x1b[38m[*]\x1b[0m %(message)s",
-        logging.DEBUG:    "\x1b[34m[+]\x1b[0m %(message)s",
-        logging.WARNING:  "\x1b[33m[!]\x1b[0m %(message)s",
-        logging.ERROR:    "\x1b[31m[-]\x1b[0m %(message)s",
+        logging.INFO:     "\x1b[98m[*]\x1b[0m %(message)s",
+        logging.DEBUG:    "\x1b[96m[+]\x1b[0m %(message)s",
+        logging.WARNING:  "\x1b[93m[!]\x1b[0m %(message)s",
+        logging.ERROR:    "\x1b[91m[-]\x1b[0m %(message)s",
         logging.CRITICAL: "\x1b[31m;1[-]\x1b[0m %(message)s",
     }
 
