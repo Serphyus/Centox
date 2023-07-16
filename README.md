@@ -45,43 +45,39 @@ the handler commands can be listed using the `help` command:
 [Centox] $ help
 
 Command    Description
----------  ---------------------------------------------
-list       lists all available: payloads layouts formats
+---------  ------------------------------------
+list       lists all available payloads
 use        choose a payload to use
-set        sets global or payload arguments
-options    show all available arguments
+set        configure payload arguments
+options    show all available payload arguments
 generate   generates the current payload
 help       shows this help message
 ```
 
 how to generate payloads:
 ```
-[Centox] $ use windows/shell/powershell
+[Centox] $ use windows/shell/python
+[+] initializing payload: windows/shell/python
 
 [Centox] $ options
 
- Payload: windows/shell/powershell
+ Payload: windows/shell/python
 
-Global Argument       Value
---------------------  -------
-typing_delay_average
-typing_delay_offset   25
+Generator arguments    Value
+---------------------  -------
+TYPING_DELAY           0
+TYPING_DELAY_OFFSET    0
 
-Payload Argument    Value
-------------------  -------
-start_delay         500
-ip
-port
-windows_admin       false
+Payload arguments    Value
+-------------------  -------
+START_DELAY          3000
+RUN_DELAY            500
+IP
+PORT                 9999
 
-[Centox] $ set ip 192.168.68.42
+[Centox] $ set IP 192.168.68.42
 
-[Centox] $ set port 9999
-
-[Centox] $ generate -o /home/user/inject.bin -l no
-[*] created temporary folder -> /tmp/tmpti0d_l1u
-[*] converting payload to format: ducky
-[*] writing raw payload to -> /tmp/tmpti0d_l1u/payload
-[*] compiling payload to injection binary...
-[*] injection compiled successfully -> /home/user/inject.bin
+[Centox] $ generate ducky_payload
+[+] generating payload
+[+] creating file: ducky_payload
 ```

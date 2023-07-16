@@ -6,9 +6,10 @@ from typing import Any, Dict
 
 
 class Payload:
-    def __init__(self, payload_dir: Path) -> None:
+    def __init__(self, name: str, payload_dir: Path) -> None:
         self._typing_delay = 0
         self._typing_delay_offset = 0
+        self._name = name
         self._payload_dir = payload_dir
 
         self.reset()
@@ -25,6 +26,12 @@ class Payload:
     @property
     def raw(self) -> str:
         return self._raw_payload
+
+
+    @property
+    def name(self) -> str:
+        return self._name
+
 
     @property
     def description(self) -> str:

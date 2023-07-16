@@ -58,7 +58,7 @@ class Handler:
             if sys.platform == "win32":
                 payload_name = payload_name.replace("\\", "/")
             
-            self._available_payload[payload_name] = Payload(payload_dir)
+            self._available_payload[payload_name] = Payload(payload_name, payload_dir)
 
     
     def _create_table(
@@ -123,6 +123,13 @@ class Handler:
     
     
     def show_options(self) -> None:
+        output = "\n Payload: "
+        
+        if self._current_payload is not None:
+            output += self._current_payload.name
+
+        output += "\n\n"
+
         generator_args = [
             ("TYPING_DELAY", self._generator.typing_delay),
             ("TYPING_DELAY_OFFSET", self._generator.typing_delay_offset)
@@ -133,7 +140,7 @@ class Handler:
             generator_args
         )
         
-        print(f"\n{generator_output}")
+        output += f"{generator_output}\n"
 
         if self._current_payload is not None:
             payload_args = []
@@ -145,7 +152,9 @@ class Handler:
                 payload_args
             )
 
-            print(f"\n{payload_output}")
+            output += f"\n{payload_output}\n"
+        
+        print(output, end="")
 
     
     def generate_payload(self, output_path: str = None) -> None:
@@ -157,9 +166,7 @@ class Handler:
         payload = self._generator.generate(self._current_payload)
 
         if output_path is None:
-            print(f"\nPayload output")
-            print("==============")
-            print(payload)
+            print(f"\n{payload}")
             return
         
         output_path = Path(output_path)
