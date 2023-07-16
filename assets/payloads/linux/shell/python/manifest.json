@@ -1,5 +1,5 @@
 {
-    "description": "Creates a reverse python2 shell on the target's pc",
+    "description": "Creates a reverse python shell on the target's pc",
     "require_admin": false,
     "args": {
         "START_DELAY": "3000",
