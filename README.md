@@ -22,12 +22,9 @@ Hacking without permission is not encouraged and the author is not responsible f
 
 ## Supported Devices
 - [x] USB Rubber Ducky
-- [x] Bash Bunny
-- [x] Key Croc
-- [x] Shark Jack
-- [x] Packet Squirrel
-- [x] LAN Turtle
 - [x] O.MG Cable
+- [ ] Bash Bunny
+- [ ] Key Croc
 
 ## Installation
 
