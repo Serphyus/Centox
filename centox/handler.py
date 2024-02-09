@@ -180,6 +180,7 @@ class Handler:
             
             elif user_input != "y":
                 logging.error("invalid choice")
+                return
             
         try:
             logging.debug(f"creating file: {output_path}")
