@@ -14,6 +14,8 @@ from centox.generator import Generator
 
 class Handler:
     def __init__(self, working_dir: Path) -> None:
+        logging.debug("initializing payload handler")
+        
         self._running = False
         self._current_payload = None
         self._working_dir = working_dir
@@ -242,8 +244,10 @@ class Handler:
     
     
     def run(self) -> None:
+        logging.debug("starting payload handler")
+
         self._running = True
-        
+
         while self._running:
             command, *args = self._get_user_input()
             command = command.lower()

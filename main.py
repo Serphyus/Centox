@@ -6,22 +6,21 @@ from centox.console import Logger
 from centox.handler import Handler
 
 
-def output_logo(working_dir: Path) -> None:
-    with open(Path(working_dir, "assets/logo.txt"), "r", encoding="utf8") as file:
+def main() -> None:
+    working_dir = Path(__file__).resolve().parent
+    
+    logo_path = Path(working_dir, "assets/logo.txt")
+    with open(logo_path, "r", encoding="utf8") as file:
         print("\x1b[36m%s\x1b[0m" % file.read())
 
-
-def main(working_dir: Path) -> None:
-    output_logo(working_dir)
-
-    logging.debug("initializing payload handler")
     handler = Handler(working_dir)
-    
-    logging.debug("starting payload handler")
     handler.run()
 
 
 if __name__ == "__main__":
     Logger.init(logging.DEBUG)
 
-    main(Path(__file__).resolve().parent)
+    try:
+        main()
+    except Exception as e:
+        logging.error(e)
