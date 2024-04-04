@@ -51,36 +51,33 @@ class Generator:
             self._typing_delay_offset = value
     
 
+    def _random_offset(self) -> int:
+        # random value of the given range with a max value of 0
+        # range: {-typing_delay_offset, ..., typing_delay_offset}
+        rand_offset = randint(
+            -self.typing_delay_offset,
+            self.typing_delay_offset
+        )
+
+        return max(0, self.typing_delay + rand_offset)
+
+
     def generate(self, payload: Payload) -> str:
         output = []
+        instructions = payload.raw
 
-        # creates constants out of the payload arguments
-        for arg, value in payload.get_args().items():
-            output.append(f"DEFINE #{arg} {value}")
-
-        for line in payload.raw.splitlines():
-            # if the user has spesified a typing delay or typing delay
-            # offset, each character typed will have a 
+        # formats in all arguments from the payload manifest
+        instructions = instructions.format(**payload.get_args())
+        
+        for line in instructions.splitlines():
             if line.startswith("STRING"):
                 if self.typing_delay or self.typing_delay_offset:
-                    # converts the #ARGUMENTS to strings. this is done
-                    # rather than using the DEFINE functionality so that
-                    # there can be created a delay between all characters.
-                    if line[8:] in payload.get_args().keys():
-                        line = f"STRING {payload.get_args()[line[8:]]}"
-                    
+                    # instructions after the "STRING "
                     line = line[7:]
 
                     for char in line:
-                        # calculate random delay between each keystroke
-                        # with a random offset if spesified. this offset
-                        # can never be below 0
-                        offset = self.typing_delay_offset
-                        rand_offset = randint(-offset, offset)
-                        delay = max(0, self.typing_delay + rand_offset)
+                        output.append(f"DELAY {self._random_offset()}")
                         
-                        output.append(f"DELAY {delay}")
-                            
                         if char == " ":
                             output.append("SPACE")
                         else:

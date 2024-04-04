@@ -7,8 +7,6 @@ from typing import Any, Dict
 
 class Payload:
     def __init__(self, name: str, payload_dir: Path) -> None:
-        self._typing_delay = 0
-        self._typing_delay_offset = 0
         self._name = name
         self._payload_dir = payload_dir
 

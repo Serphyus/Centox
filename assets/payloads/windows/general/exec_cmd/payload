@@ -1,8 +1,5 @@
-REM Executes command in powershell
-DELAY #START_DELAY
+DELAY {START_DELAY}
 GUI r
-DELAY #RUN_DELAY
-STRING cmd /c start /min powershell -w 1 "
-STRING #COMMAND
-STRING "
+DELAY {RUN_DELAY}
+STRING cmd /c start /min powershell -w 1 "{COMMAND}"
 ENTER
